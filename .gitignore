@@ -1,0 +1,14 @@
+*.i
+*.ii
+*.gpu
+*.ptx
+*.cubin
+*.fatbin
+*.dll
+.vs/
+x64/
+data/
+Poisson_Samples/
+*.tif
+*.exe
+*.swc

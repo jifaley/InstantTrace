@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1340
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Fast_Marching_new", "Fast_Marching_new\Fast_Marching_new.vcxproj", "{28A92506-67F8-4C74-97D6-0553C8E59679}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{28A92506-67F8-4C74-97D6-0553C8E59679}.Debug|x64.ActiveCfg = Debug|x64
+		{28A92506-67F8-4C74-97D6-0553C8E59679}.Debug|x64.Build.0 = Debug|x64
+		{28A92506-67F8-4C74-97D6-0553C8E59679}.Release|x64.ActiveCfg = Release|x64
+		{28A92506-67F8-4C74-97D6-0553C8E59679}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A08EB4D1-0D8E-4D54-ABDD-6F9D84EE568E}
+	EndGlobalSection
+EndGlobal
