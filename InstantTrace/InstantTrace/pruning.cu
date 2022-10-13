@@ -1907,7 +1907,15 @@ void outputSwc(int* d_compress, int* d_decompress, int* d_parentMat_compact, uch
 		swcPoint* it = &vSwcPoint[i];
 		//Adding Pruning Merge 20211030
 		//fprintf(swc_out, "%d %d %d %d %d %d %d\n", it->swcIndex, 0, it->x, it->y, it->z, it->r, it->parentSwcIndex);
-		fprintf(swc_out, "%d %d %d %d %d %d %d\n", it->swcIndex, ((it->seedNumber - 1) % 12 + 2), it->x, it->y, it->z, it->r, it->parentSwcIndex);
+
+		int this_color = ((it->seedNumber - 1) % 12 + 2);
+
+		if (it->seedNumber == 1)
+			this_color = 7;
+		if (it->seedNumber == 2)
+			this_color = 5;
+
+		fprintf(swc_out, "%d %d %d %d %d %d %d\n", it->swcIndex, this_color, it->x, it->y, it->z, it->r, it->parentSwcIndex);
 		//Ends
 	}
 

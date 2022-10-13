@@ -2,7 +2,7 @@
 #include "fastmarching.h"
 #include "TimerClock.hpp"
 
-//#define __NO__MERGE
+#define __NO__MERGE
 
 
 __device__ int getfather_gpu(int* d_disjointSet, int x)

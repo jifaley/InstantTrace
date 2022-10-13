@@ -25,6 +25,39 @@ __global__ void warmupKernel()
 }
 
 
+dim3 find_max(dim3 target, int width, int height, int slice, uchar* arr)
+{
+	dim3 result = target;
+	int max_intensity = arr[target.z * width * height + target.y * width + target.x];
+
+	for (int k = target.z - 3; k < target.z + 3; k++)
+	{
+		if (k < 0 || k >= slice)
+			continue;
+		for (int i = target.y - 3; i < target.y + 3; i++)
+		{
+			if (i < 0 || i >= height)
+				continue;
+			for (int j = target.x - 3; j < target.x + 3; j++)
+			{
+				if (j < 0 || j >= width)
+					continue;
+				int cur_intensity = arr[k * width * height + i * width + j];
+				if (cur_intensity > max_intensity)
+				{
+					max_intensity = cur_intensity;
+					result.z = k; result.y = i; result.x = j;
+				}
+			}
+		}
+	}
+	std::cerr << "Previous: " << target.x << ' ' << target.y << ' ' << target.z << " Intensity: " << (int)(arr[target.z * width * height + target.y * width + target.x])
+		<< std::endl;
+	std::cerr << "Now: " << result.x << ' ' << result.y << ' ' << result.z << " Intensity: " << max_intensity << std::endl;
+	return result;
+}
+
+
 int main(int argc, char* argv[])
 {
 	TimerClock timer, timer2, timer3;
@@ -33,7 +66,14 @@ int main(int argc, char* argv[])
 	std::vector<std::string> files;
 	std::vector<std::string> names;
 
-	std::string inputPath = "data//bright";
+	std::string inputPath = "data_neuron_cluster";
+
+
+	if (argc > 1)
+	{
+		inputPath = argv[1];
+	}
+
 
 	getFiles(inputPath, files, names);
 
@@ -44,11 +84,11 @@ int main(int argc, char* argv[])
 		std::string file = files[item];
 		std::string name = names[item];
 
-		std::string breakDownName = "breakDown//" + name + ".txt";
-		FILE* breakDownFile;
+		//std::string breakDownName = "breakDown//" + name + ".txt";
+		//FILE* breakDownFile;
 
 
-		fopen_s(&breakDownFile, breakDownName.c_str(), "w+");
+		//fopen_s(&breakDownFile, breakDownName.c_str(), "w+");
 
 
 
@@ -62,19 +102,6 @@ int main(int argc, char* argv[])
 		string inputName = "fix-P7-4.5h-cell2-60x-zoom1.5_merge_c2.tif";
 
 		inputName = file;
-
-
-		//std::cerr << "Files: " << std::endl;
-		//for (auto file : files)
-		//{
-		//	std::cerr << file << std::endl;
-		//}
-
-		//std::cerr << "Names: " << std::endl;
-		//for (auto name : names)
-		//{
-		//	std::cerr << name << std::endl;
-		//}
 
 		/*if (argc > 1)
 		{
@@ -134,14 +161,14 @@ int main(int argc, char* argv[])
 
 		//useLocalTh = false; // for flycircuit
 
-		/*if (argc > 3)
+		if (argc > 3)
 		{
 
 			string ifUseLocal = argv[3];
 
 			if (ifUseLocal == "0")
 				useLocalTh = false;
-		}*/
+		}
 
 
 		if (useLocalTh)
@@ -155,22 +182,11 @@ int main(int argc, char* argv[])
 		int globalThreshold = 5;
 		globalThreshold = g2;
 
-		if (name == "1_1_Live_2-2-2010_9-52-24_AM_med_Red.tif")
-			globalThreshold = 50;
-		if (name == "1_5dpf_Live_1-30-2010_12-39-26_PM_med_Red.tif")
-			globalThreshold = 60;
-		if (name == "lAPT_PN1_neuron.tif")
-			globalThreshold = 30;
-		if (name == "SLP_PN_neuron.tif")
-			globalThreshold = 35;
-		if (name == "WED_SLP_PN_neuron.tif")
-			globalThreshold = 30;
-
-		/*if (argc > 2)
+		if (argc > 2)
 		{
 			if (atoi(argv[2]) != -1)
 				globalThreshold = atoi(argv[2]);
-		}*/
+		}
 
 		//globalThreshold = 1;// for flycircuits
 
@@ -208,45 +224,6 @@ int main(int argc, char* argv[])
 		cudaDeviceSynchronize();
 		std::cerr << "Stream Compaction cost: " << timer.getTimerMilliSec() << "ms" << std::endl << std::endl;
 		timer.update();
-
-
-		//while (newSize > width * height * slice / 20 && globalThreshold < 250)
-		//{
-		//	
-		//	if (globalThreshold < 245)
-		//		globalThreshold += 2;
-		//	else
-		//		globalThreshold = 250;
-		//	std::cerr << "auto adapting globalth: " << globalThreshold << std::endl;
-		//	
-
-		//	addGlobalThreshold(d_imagePtr, width, height, slice, globalThreshold);
-		//	std::cerr << "Add GlobalThreshold cost: " << timer.getTimerMilliSec() << "ms" << std::endl << std::endl;
-		//	timer.update();
-
-		//	paddingThreshold = globalThreshold + 2;
-		//	addDarkPadding(d_imagePtr, width, height, slice, paddingThreshold);
-		//	cudaDeviceSynchronize();
-		//	std::cerr << "Add Padding cost: " << timer.getTimerMilliSec() << "ms" << std::endl << std::endl;
-		//	timer.update();
-
-		//	cudaFree(d_compress);
-		//	cudaFree(d_decompress);
-		//	cudaFree(d_imagePtr_compact);
-
-		//	d_compress = NULL;
-		//	d_decompress = NULL;
-		//	d_imagePtr_compact = NULL;
-
-		//	compactImage(d_imagePtr, d_imagePtr_compact, d_compress, d_decompress, width, height, slice, newSize);
-		//	std::cerr << "Old: " << width * height * slice << " New:" << newSize << std::endl;
-
-		//	cudaDeviceSynchronize();
-		//	std::cerr << "Stream Compaction cost: " << timer.getTimerMilliSec() << "ms" << std::endl << std::endl;
-		//	timer.update();
-		//}
-
-
 
 
 		//Step 5: 计算每个点的控制半径，用于最后的剪枝判断
@@ -290,6 +267,10 @@ int main(int argc, char* argv[])
 
 		getCenterPos(d_compress, d_decompress, d_radiusMat_compact, width, height, slice, newSize, maxPos, maxRadius);
 
+		
+
+
+
 
 		int max_pos = maxPos;
 		int mz = max_pos / (width * height);
@@ -301,11 +282,13 @@ int main(int argc, char* argv[])
 		std::cerr << "Calc Radius GPU cost: " << timer.getTimerMilliSec() << "ms" << std::endl << std::endl;
 
 
+
+
 		timer.update();
 
 		std::cerr << "[Breakdown] Total Preprocessing Cost: " << timer3.getTimerMilliSec() << "ms" << std::endl << std::endl;
 
-		fprintf(breakDownFile, "%.2lf ", timer3.getTimerMilliSec());
+//		fprintf(breakDownFile, "%.2lf ", timer3.getTimerMilliSec());
 
 		timer3.update();
 
@@ -327,7 +310,29 @@ int main(int argc, char* argv[])
 #endif // __ONLY__ONE__SEED
 
 
+		//780.0 500.0 70.0
+		//1215.0 240.0 110.0
 
+		seedArr.clear();
+		//dim3 soma1 = { 780,(unsigned int)(height - 500),70 };
+		//dim3 soma2 = { 1215, (unsigned int)(height - 240), 110 };
+
+
+		dim3 soma1 = { 317,(unsigned int)(height - 204),113 };
+		dim3 soma2 = { 278,(unsigned int)(height - 183),73 };
+		dim3 soma3 = { 210,(unsigned int)(height - 149),23 };
+		dim3 soma4 = { 246,(unsigned int)(height - 159),38 };
+
+		soma1 = find_max(soma1, width, height, slice, h_imagePtr);
+		soma2 = find_max(soma2, width, height, slice, h_imagePtr);
+		soma3 = find_max(soma3, width, height, slice, h_imagePtr);
+		soma4 = find_max(soma4, width, height, slice, h_imagePtr);
+
+
+		seedArr.push_back(soma1.z * width * height + soma1.y * width + soma1.x);
+		seedArr.push_back(soma2.z * width * height + soma2.y * width + soma2.x);
+		seedArr.push_back(soma3.z * width * height + soma3.y * width + soma3.x);
+		seedArr.push_back(soma4.z * width * height + soma4.y * width + soma4.x);
 
 
 		cudaDeviceSynchronize();
@@ -353,7 +358,7 @@ int main(int argc, char* argv[])
 		}
 
 		std::cerr << "[Breakdown] Total Seed Generating Cost: " << timer3.getTimerMilliSec() << "ms" << std::endl << std::endl;
-		fprintf(breakDownFile, "%.2lf ", timer3.getTimerMilliSec());
+		//fprintf(breakDownFile, "%.2lf ", timer3.getTimerMilliSec());
 		timer3.update();
 
 		//Step 7: 初始追踪,使用简化的fast marching算法，或者说并行最短路算法
@@ -384,7 +389,7 @@ int main(int argc, char* argv[])
 		timer.update();
 
 		std::cerr << "[Breakdown] Total Init Generating Cost: " << timer3.getTimerMilliSec() << "ms" << std::endl << std::endl;
-		fprintf(breakDownFile, "%.2lf ", timer3.getTimerMilliSec());
+		//fprintf(breakDownFile, "%.2lf ", timer3.getTimerMilliSec());
 		timer3.update();
 
 		//Step 8: 分支合并算法
@@ -412,7 +417,7 @@ int main(int argc, char* argv[])
 		timer.update();
 
 		std::cerr << "[Breakdown] Total Merging Cost: " << timer3.getTimerMilliSec() << "ms" << std::endl << std::endl;
-		fprintf(breakDownFile, "%.2lf ", timer3.getTimerMilliSec());
+		//fprintf(breakDownFile, "%.2lf ", timer3.getTimerMilliSec());
 		timer3.update();
 
 		cudaDeviceSynchronize();
@@ -452,16 +457,16 @@ int main(int argc, char* argv[])
 		
 
 		std::cerr << "[Breakdown] Total Pruning Cost: " << timer3.getTimerMilliSec() << "ms" << std::endl << std::endl;
-		fprintf(breakDownFile, "%.2lf ", timer3.getTimerMilliSec());
+		//fprintf(breakDownFile, "%.2lf ", timer3.getTimerMilliSec());
 		timer3.update();
 
 
 		std::cerr << "Total time cost: " << timer2.getTimerMilliSec() << "ms" << std::endl;
-		fprintf(breakDownFile, "%.2lf\n", timer2.getTimerMilliSec());
+		//fprintf(breakDownFile, "%.2lf\n", timer2.getTimerMilliSec());
 		timer2.update();
 
 		
-		fclose(breakDownFile);
+		//fclose(breakDownFile);
 	}
 
 	return 0;

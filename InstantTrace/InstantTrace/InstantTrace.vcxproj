@@ -12,7 +12,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{28A92506-67F8-4C74-97D6-0553C8E59679}</ProjectGuid>
-    <RootNamespace>Fast_Marching_new</RootNamespace>
+    <RootNamespace>InstantTrace</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.10240.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

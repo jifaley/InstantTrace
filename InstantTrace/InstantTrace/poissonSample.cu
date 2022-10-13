@@ -938,8 +938,12 @@ void filterPoissonSample_gpu(std::vector<int>& seedArr, dim3 center, int centerR
 			seedArr.push_back(seedPos[i]);
 		}
 	}
+
+
+
 	seedArr.push_back(center.z * width * height + center.y * width + center.x);
 	std::cerr << "center idx: " << center.z * width * height + center.y * width + center.x << std::endl;
+	std::cerr << "center_x: " << center.x << " center_y: " << center.y << " center_z: " << center.z << std::endl;
 	validCount++;
 
 	std::cerr << "Total num of samples GPU:" << sampleNum << std::endl;
