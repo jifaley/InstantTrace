@@ -1775,6 +1775,103 @@ bool smooth_curve_and_radius(std::vector<swcPoint*> & mCoord, int winsize);
 void smooth(std::vector<swcPoint> & vSwcPoint, std::vector<int> & vIsLeaf, std::vector<int> & vIsRoot, int winsize);
 
 
+double distance(int a_index, int b_index, int width, int height, int slice)
+{
+	dim3 a, b;
+	a.z = a_index / (width * height);
+	a.y = (a_index % (width * height)) / width;
+	a.x = a_index % width;
+
+	b.z = b_index / (width * height);
+	b.y = (b_index % (width * height)) / width;
+	b.x = b_index % width;
+
+	double result = sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y)* (a.y - b.y) + (a.z - b.z) * (a.z - b.z));
+
+	return result;
+}
+
+void findConnetion(std::vector<int>& vSwcIndex, std::vector<std::pair<int,int>>& connections, int* h_parentSwcIdx, uchar* radiusSwc, int* colorMat, int* h_childNumMat, int* h_flags, int width, int height, int slice)
+{
+	//flags: 0:soma, 1:leaf, 2:path, 3:branch
+	//注意swc数组下标从1开始
+
+	int n = vSwcIndex.size();
+	for (int item = 1; item < n; item++)
+	{
+		h_childNumMat[item] = 0;
+		h_flags[item] = -1;
+		//std::cerr << "Item: " << item << " vSwcIdx: " << vSwcIndex[item] << std::endl;
+	}
+
+	for (int item = 1; item < n; item++)
+	{
+		int index = vSwcIndex[item]; //vSwcIdx指的是在体数据中的index，用于计算x,y,z
+		int parentSwcIndex = h_parentSwcIdx[item]; //parentSwcIdx指的是在swc序列中的index
+		if (parentSwcIndex != -1)
+			h_childNumMat[parentSwcIndex]++;
+	}
+
+	int leaf_counter = 0;
+	int branch_counter = 0;
+	int path_counter = 0;
+
+	std::vector<int> vLeaf;
+
+	for (int item = 1; item < n; item++)
+	{
+		if (h_childNumMat[item] == 0) //leaf
+		{
+			leaf_counter++; h_flags[item] = 1;
+			vLeaf.push_back(item);
+		}
+
+		if (h_childNumMat[item] == 1) //path
+		{
+			path_counter++; h_flags[item] = 2;
+		}
+			
+		if (h_childNumMat[item] > 1) //branch
+		{
+			branch_counter++; h_flags[item] = 3;
+		}
+	}
+
+	int connect_counter = 0;
+
+	for (int i = 0; i < leaf_counter; i++)
+	{
+		for (int j = i + 1; j < leaf_counter; j++)
+		{
+			int a_swcPos = vLeaf[i];
+			int b_swcPos = vLeaf[j];
+			int a_index = vSwcIndex[a_swcPos];
+			int b_index = vSwcIndex[b_swcPos];
+			int threshold = 20;
+			if (distance(a_index, b_index, width, height, slice) < threshold)
+			{
+				h_flags[a_swcPos] = 11;
+				h_flags[b_swcPos] = 11;
+				connect_counter++;
+				connections.push_back(std::pair<int,int>(a_swcPos, b_swcPos));
+				break; //每个leaf只能用一次！
+			}
+		}
+	}
+
+
+	
+
+	std::cerr << "Leaf Number: " << leaf_counter << std::endl;
+	std::cerr << "Branch Number: " << branch_counter << std::endl;
+	std::cerr << "Connect Number: " << connect_counter << std::endl;
+
+}
+
+
+
+
+
 void outputSwc(int* d_compress, int* d_decompress, int* d_parentMat_compact, uchar* d_radiusMat_compact, short int* d_seedNumberPtr, int* d_disjointSet, std::vector<int>& segment_leafIdx_final, std::vector<int>& segment_rootIdx_final, std::vector<int>& segment_length_final, int width, int height, int slice, int* d_segment_leafIdx, int* d_segment_rootIdx, int segNumberFiltered, int segNumberFinal)
 {
 	FILE* swc_out = nullptr;
@@ -1872,10 +1969,112 @@ void outputSwc(int* d_compress, int* d_decompress, int* d_parentMat_compact, uch
 	cudaFree(d_swcIdxToIndex);
 	cudaFree(d_radiusSwc);
 
+	int n = vSwcIndex.size();
+	int* h_childNumMat = (int*)malloc(sizeof(int) * n);
+	int* h_flags = (int*)malloc(sizeof(int) * n);
+
+	std::vector<std::pair<int, int>>connections;
+
+	findConnetion(vSwcIndex, connections, h_parentSwcIdx, radiusSwc, colorMat, h_childNumMat, h_flags, width, height, slice);
+
+	for (int item = 0; item < connections.size(); item++)
+	{
+		int a_swcIdx = connections[item].first;
+		int b_swcIdx = connections[item].second;
+
+		double a_sum_length = 0;
+		double b_sum_length = 0;
+
+		int a_branch = -1;
+		int b_branch = -1;
+		int current = a_swcIdx;
+		int parent = -1;
+		
+		//flags: 0:soma, 1:leaf, 2:path, 3:branch
+		while (h_flags[current] != 0 && h_flags[current] != 3)
+		{
+			parent = h_parentSwcIdx[current];
+			if (parent == -1) break;
+			int current_index = vSwcIndex[current];
+			int parent_index = vSwcIndex[parent];
+			a_sum_length += distance(current_index, parent_index, width, height, slice);
+			current = parent;
+		}
+		if (h_flags[current] == 3)
+		{
+			a_branch = current;
+		}
+
+		current = b_swcIdx;
+		parent = -1;
+
+		while (h_flags[current] != 0 && h_flags[current] != 3)
+		{
+			parent = h_parentSwcIdx[current];
+			if (parent == -1) break;
+			int current_index = vSwcIndex[current];
+			int parent_index = vSwcIndex[parent];
+			b_sum_length += distance(current_index, parent_index, width, height, slice);
+			current = parent;
+		}
+		if (h_flags[current] == 3)
+		{
+			b_branch = current;
+		}
+
+		if (a_branch > 0 && b_branch > 0)
+		{
+			if (a_sum_length < b_sum_length)
+			{
+				h_flags[a_branch] = 103; //smaller one
+				h_flags[b_branch] = 203; //larger one
+
+				int x1, x2, x3;
+				x3 = b_swcIdx;
+				x2 = a_swcIdx;
+
+				while (1 == 1)
+				{
+					x1 = h_parentSwcIdx[x2];
+					h_parentSwcIdx[x2] = x3;
+					colorMat[x2] = colorMat[x3];
+					if (x1 == a_branch) break; //branch不应该被修改，否则另一分支可能出问题
+					x3 = x2;
+					x2 = x1;
+				}
+			}
+			else
+			{
+				h_flags[a_branch] = 203;
+				h_flags[b_branch] = 103;
+
+				int x1, x2, x3;
+				x3 = a_swcIdx;
+				x2 = b_swcIdx;
+
+				while (1 == 1)
+				{
+					x1 = h_parentSwcIdx[x2];
+					h_parentSwcIdx[x2] = x3;
+					colorMat[x2] = colorMat[x3];
+					if (x1 == b_branch) break;
+					x3 = x2;
+					x2 = x1;
+				}
+			}
+		}
+
+		std::cerr << "A_branch: " << a_sum_length << std::endl;
+		std::cerr << "B_branch: " << b_sum_length << std::endl;
+	}
+
+	
+
 
 
 	vector<swcPoint> vSwcPoint(vSwcIndex.size());
 
+	//注意这里的idx是从1开始的
 	for (int i = 1; i < vSwcIndex.size(); i++)
 	{
 		int index = vSwcIndex[i];
@@ -1885,6 +2084,20 @@ void outputSwc(int* d_compress, int* d_decompress, int* d_parentMat_compact, uch
 		int x = index % width;
 		int r = radiusSwc[i];
 
+		if (h_flags[i] == 11)
+		{
+			r = 20; 
+		}
+			
+		if (h_flags[i] == 103)
+		{
+			r = 40;
+		}
+		if (h_flags[i] == 203)
+		{
+			r = 60;
+		}
+
 		//Adding Pruning Merge 20211030
 		vSwcPoint[i] = swcPoint(x, height - y, z, r, i, parentSwcIndex, colorMat[i]);//disjointSet[d_seedNumberPtr[index]]);
 		//fprintf(swc_out, "%d %d %d %d %d %d %d\n", i, 0, x, height - y, z, r, parentSwcIndex);
@@ -1892,6 +2105,8 @@ void outputSwc(int* d_compress, int* d_decompress, int* d_parentMat_compact, uch
 
 	}
 
+	free(h_childNumMat);
+	free(h_flags);
 
 
 	free(colorMat);
