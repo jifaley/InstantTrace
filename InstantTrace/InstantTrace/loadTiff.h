@@ -5,5 +5,3 @@
 #include <iostream>
 
 void loadTiff(const char* file, std::vector<cv::Mat> &buffer, int *size);
-
-void saveTiff(const char *path, uchar *buffer, int *size);

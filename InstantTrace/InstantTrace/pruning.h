@@ -32,4 +32,4 @@ inline float gwdtFunc(float dist, float value1, float value2)
 }
 
 
-void pruneLeaf_3d_gpu(std::vector<int>& leafArr, int &validLeafCount, std::vector<int>& disjointSet, int width, int height, int slice, int newSize, uchar* d_radiusMat, uchar* d_imagePtr, uchar* d_imagePtr_compact, int* d_compress, int* d_decompress, int* d_parentMat, uchar* d_statusMat_compact, int* d_childNumMat, short int* d_seedNumberPtr, int* disjointSet_gpu);
+void pruneLeaf_3d_gpu(std::vector<int>& leafArr, int &validLeafCount, std::vector<int>& disjointSet, int width, int height, int slice, int newSize, uchar* d_radiusMat, uchar* d_imagePtr, uchar* d_imagePtr_compact, int* d_compress, int* d_decompress, int* d_parentMat, uchar* d_statusMat_compact, int* d_childNumMat, short int* d_seedNumberPtr, int* disjointSet_gpu, std::string inputName);

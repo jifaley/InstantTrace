@@ -1,15 +1,26 @@
-# PAPP
-Parallel All Path Pruning for neuron tracing
+# InstantTrace
+Fast Parallel Neuron Tracing (In CUDA Implementation)
+
+Function: Neuron tracing for optical microscopy(OM) neuron images. 
+The input is in .tif format, the output is in .swc format.
+
+Sample data: See the "data" folder. The correspoding ground truth are set in the "ground truth" folder.
+
+Results: The output of the program are stored in the "results" folder.
+
+The main function：kernel.cu
+
+## How to use: see "usage.txt"
 
 
-功能: 对数据进行神经元追踪, 输入为原始图像(tif格式)，输出为swc格式。
-
-数据: data/case1-slide2-section2-left-cell3_merge_c2.tif
-
-结果: results/FastMarching_Resample_GWDT_AfterPruneMerge.swc
-
-主函数：kernel.cu
-
+Steps:
+1. Load the image.
+2. Preprocessing by thresholding/Grey Weight Distance Transform. //threshold.cu
+3. Making stream compaction for image, remove the zero-valued voxels. //compaction.cu
+4. Make parallel poisson disk sampling to generate seeds for neuron tracing. //poissonSample.cu
+5. Make intial tracing using parallel fast marching algorithm. //fastmarching.cu
+6. Make topology merging for the branches extended by different seeds. //mergesegments.cu
+7. Make pruning and refinement for the neuron branches, and reach the final neuron tracing result. //pruning.cu
 
 步骤:
 1. 读入图像。
@@ -19,8 +30,4 @@ Parallel All Path Pruning for neuron tracing
 4. 对图像进行初始追踪，从各个种子点开始，使用并行的快速行进(Fast Marching)方法进行扩展。//fastmarching.cu
 5. 将各个种子扩展出来的不同分支进行拓扑上的合并。//mergeSegments.cu
 6. 将合并后的结果进行剪枝(Pruning)，得到最终追踪结果。//pruing.cu
-
-loadTiff.cpp: 用于读入tif文件
-
-TimerClock.hpp: 用于计时
 

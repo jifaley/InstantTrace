@@ -86,7 +86,6 @@
   <ItemGroup>
     <CudaCompile Include="compaction.cu" />
     <CudaCompile Include="fastmarching.cu" />
-    <CudaCompile Include="histogram.cu" />
     <CudaCompile Include="kernel.cu" />
     <CudaCompile Include="mergeSegments.cu" />
     <CudaCompile Include="poissonSample.cu" />
@@ -96,7 +95,6 @@
   <ItemGroup>
     <ClInclude Include="compaction.h" />
     <ClInclude Include="fastmarching.h" />
-    <ClInclude Include="histogram.h" />
     <ClInclude Include="loadTiff.h" />
     <ClInclude Include="mergeSegments.h" />
     <ClInclude Include="poissonSample.h" />

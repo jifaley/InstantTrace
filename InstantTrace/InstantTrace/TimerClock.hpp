@@ -5,6 +5,8 @@
 using namespace std;
 using namespace std::chrono;
 
+
+//A tool for checking running time in CPU
 class TimerClock
 {
 public:

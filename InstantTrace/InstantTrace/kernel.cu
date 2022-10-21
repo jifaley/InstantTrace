@@ -4,7 +4,6 @@
 #include <opencv2/highgui/highgui.hpp>
 
 #include "utils.h"
-#include "histogram.h"
 #include "poissonSample.h"
 #include "threshold.h"
 #include "pruning.h"
@@ -13,9 +12,12 @@
 #include "compaction.h"
 
 #define __USE__DIST26
+
+//If one wants to try the version without multi seeds, use this option
 //#define __ONLY__ONE__SEED
 
-
+//Warmup:给GPU预热时间
+//Kernel for GPU warmup
 __global__ void warmupKernel()
 {
 	unsigned int tid = blockIdx.x * blockDim.x + threadIdx.x;
@@ -66,56 +68,39 @@ int main(int argc, char* argv[])
 	std::vector<std::string> files;
 	std::vector<std::string> names;
 
-	std::string inputPath = "data_neuron_cluster";
-
+	std::string inputPath = "data";
 
 	if (argc > 1)
 	{
 		inputPath = argv[1];
 	}
 
-
-	getFiles(inputPath, files, names);
-
-
+	if (inputPath.length() > 4 && inputPath.substr(inputPath.length() - 4, 4) == std::string(".tif"))
+	{
+		files.push_back(inputPath);
+		names.push_back(inputPath);
+	}
+	else
+	{
+		/*When use multi files*/
+		getFiles(inputPath, files, names);
+	}
 
 	for (int item = 0; item < names.size(); item++)
 	{
 		std::string file = files[item];
 		std::string name = names[item];
 
-		//std::string breakDownName = "breakDown//" + name + ".txt";
-		//FILE* breakDownFile;
-
-
-		//fopen_s(&breakDownFile, breakDownName.c_str(), "w+");
-
-
-
-		std::cerr << "file: " << item + 1 << "//" << names.size() << std::endl;
+		std::cerr << "file: " << item + 1 << "/" << names.size() << std::endl;
 		cudaDeviceReset();
 
 		timer.update();
 
 		//Step 0: 读图, CPU端耗时约600-800ms，读入后拷贝原始体数据到GPU耗时约40ms
 		std::cerr << "Loading image.." << std::endl;
-		string inputName = "fix-P7-4.5h-cell2-60x-zoom1.5_merge_c2.tif";
+		string inputName;
 
 		inputName = file;
-
-		/*if (argc > 1)
-		{
-
-			inputName = argv[1];
-
-			if (inputName == "3")
-				inputName = "case1-slide2-section2-left-cell3_merge_c2.tif";
-
-			if (inputName == "5")
-				inputName = "fix-P7-4.5h-cell2-60x-zoom1.5_merge_c2.tif";
-		}
-
-		inputName = "data//" + inputName;*/
 
 		int *imageShape = new int[3];
 		uchar* h_imagePtr = loadImage(inputName, imageShape);
@@ -129,7 +114,7 @@ int main(int argc, char* argv[])
 
 
 		//Step 1: GPU预热
-
+		//Step 1: GPU warmup
 		warmupKernel << <1, 1 >> > ();
 
 		printf("warmup cost: %dms\n\n", (int)(timer.getTimerMilliSec()));
@@ -151,7 +136,7 @@ int main(int argc, char* argv[])
 
 
 		//Step 2: 添加阈值等基础预处理
-
+		//Step 2: Preprocessing, such as thresholding(global/local)
 		//依据blockSize分块，根据块内灰度情况自适应添加阈值
 		//耗时:约20ms
 		int localThresholdBlockSize = 32;
@@ -188,7 +173,7 @@ int main(int argc, char* argv[])
 				globalThreshold = atoi(argv[2]);
 		}
 
-		//globalThreshold = 1;// for flycircuits
+		//globalThreshold = 1;// for flycircuit
 
 		if (globalThreshold > 1)
 			addGlobalThreshold(d_imagePtr, width, height, slice, globalThreshold);
@@ -204,7 +189,8 @@ int main(int argc, char* argv[])
 		timer.update();
 
 
-		//Step 3: 压缩原始图像，除去非0值 (称为stream compaction, 流压缩) 
+		//Step 3: 压缩原始图像，除去0值 (称为stream compaction, 流压缩) 
+		//Step 3: Stream Compaction, remove the zero-valued elements and compress the original image
 		//耗时:约70ms
 
 
@@ -226,7 +212,8 @@ int main(int argc, char* argv[])
 		timer.update();
 
 
-		//Step 5: 计算每个点的控制半径，用于最后的剪枝判断
+		//Step 4: 计算每个点的控制半径，用于最后的剪枝判断
+		//Step 4: Calculating the radius of the voxels (i.e., the radius of the neighborhood in the foreground)  
 		//耗时:约70ms
 		uchar* d_radiusMat_compact;
 		cudaMalloc((void**)&d_radiusMat_compact, sizeof(uchar) * newSize);
@@ -244,7 +231,9 @@ int main(int argc, char* argv[])
 		}
 
 
-		//Step 4: GrayWeight Distacne Transform, 灰度距离变换，作为预处理的一种，让图像更明显
+		//Step 5: GrayWeight Distacne Transform, 灰度距离变换，作为预处理的一种，让图像更明显
+		//Step 5: GrayWeight Distacne Transform, (See Xiao et al. APP2: automatic tracing of 3d neuron morphology...)
+		//As a step of preprocessing, making the neuron more clear
 		//耗时:约80ms
 
 		addGreyWeightTransform(d_imagePtr, d_imagePtr_compact, d_compress, d_decompress, width, height, slice, newSize);
@@ -255,23 +244,14 @@ int main(int argc, char* argv[])
 		int maxpos = 0;
 
 
-		////寻找最大值，作为神经元胞体中心
-		//thrust::device_ptr<uchar> d_ptr(d_radiusMat);
-		//thrust::device_ptr<uchar> iter = thrust::max_element(d_ptr, d_ptr + width * height * slice);
-		//int maxRadius = (int)(*iter);
-		//maxpos = iter - d_ptr;
-
-
+		//寻找最大值，作为神经元胞体中心
+		//Find the center of the neuron soma
 		int maxRadius;
 		int maxPos;
-
+		
 		getCenterPos(d_compress, d_decompress, d_radiusMat_compact, width, height, slice, newSize, maxPos, maxRadius);
 
 		
-
-
-
-
 		int max_pos = maxPos;
 		int mz = max_pos / (width * height);
 		int my = max_pos % (width * height) / width;
@@ -288,16 +268,15 @@ int main(int argc, char* argv[])
 
 		std::cerr << "[Breakdown] Total Preprocessing Cost: " << timer3.getTimerMilliSec() << "ms" << std::endl << std::endl;
 
-//		fprintf(breakDownFile, "%.2lf ", timer3.getTimerMilliSec());
-
 		timer3.update();
 
 
 		//Step 6: 泊松采样,给后面的追踪提供种子。实现自Wei et al.的parallel poisson disk sampling
-		//耗时:约120ms
+		//Step 6: Parallel Poisson Disk sampling, see (L.-Y. Wei. Parallel poisson disk sampling.) 
 		//分为采样和筛选两个步骤，筛选需要传入原数组（足够亮的才要），还有传入胞体中心和它的半径
+		//The steps include sampling and filtering. Only the samples with high intensity are accepted.
 		//返回的是std::vector seedArr，里面存储了种子点的位置, 同时该数组的最后添加了一个元素，胞体中心，作为额外的也是最重要的种子
-
+		//The output, "seedArr", includes the locations of sampled seed points. Specically, the last seed point is the center of neuron soma.
 
 		std::vector<int> seedArr;
 
@@ -305,49 +284,14 @@ int main(int argc, char* argv[])
 		seedArr.push_back(center.z * width * height + center.y * width + center.x);
 #else
 		doPoissonSample2(seedArr, center, maxRadius, width, height, slice, newSize, d_imagePtr, d_imagePtr_compact, d_compress, d_decompress);
-		//doPoissonSample/doPoissonSample2 都有采样点数过多的问题
 
 #endif // __ONLY__ONE__SEED
 
-
-		//780.0 500.0 70.0
-		//1215.0 240.0 110.0
-
-		seedArr.clear();
-		//dim3 soma1 = { 780,(unsigned int)(height - 500),70 };
-		//dim3 soma2 = { 1215, (unsigned int)(height - 240), 110 };
-
-
-		dim3 soma1 = { 317,(unsigned int)(height - 204),113 };
-		dim3 soma2 = { 278,(unsigned int)(height - 183),73 };
-		dim3 soma3 = { 210,(unsigned int)(height - 149),23 };
-		dim3 soma4 = { 246,(unsigned int)(height - 159),38 };
-
-		soma1 = find_max(soma1, width, height, slice, h_imagePtr);
-		soma2 = find_max(soma2, width, height, slice, h_imagePtr);
-		soma3 = find_max(soma3, width, height, slice, h_imagePtr);
-		soma4 = find_max(soma4, width, height, slice, h_imagePtr);
-
-
-		seedArr.push_back(soma1.z * width * height + soma1.y * width + soma1.x);
-		seedArr.push_back(soma2.z * width * height + soma2.y * width + soma2.x);
-		seedArr.push_back(soma3.z * width * height + soma3.y * width + soma3.x);
-		seedArr.push_back(soma4.z * width * height + soma4.y * width + soma4.x);
 
 
 		cudaDeviceSynchronize();
 		std::cerr << "GPU sampling postprocessing and output cost " << timer.getTimerMilliSec() << "ms" << std::endl << std::endl;
 		timer.update();
-
-		//doPoissonSample_cpu(seedArr, center, maxRadius, width, height, slice, newSize, d_imagePtr, d_imagePtr_compact, d_compress, d_decompress);
-
-		//std::cerr << "GPU sampling postprocessing and output cost " << timer.getTimerMilliSec() << "ms" << std::endl << std::endl;
-		//timer.update();
-
-		//doPoissonSample2(seedArr, center, maxRadius, width, height, slice, newSize, d_imagePtr, d_imagePtr_compact, d_compress, d_decompress);
-
-		//std::cerr << "GPU sampling postprocessing and output cost " << timer.getTimerMilliSec() << "ms" << std::endl << std::endl;
-		//timer.update();
 
 		cudaDeviceSynchronize();
 		errorCheck = cudaGetLastError();
@@ -358,16 +302,17 @@ int main(int argc, char* argv[])
 		}
 
 		std::cerr << "[Breakdown] Total Seed Generating Cost: " << timer3.getTimerMilliSec() << "ms" << std::endl << std::endl;
-		//fprintf(breakDownFile, "%.2lf ", timer3.getTimerMilliSec());
 		timer3.update();
 
-		//Step 7: 初始追踪,使用简化的fast marching算法，或者说并行最短路算法
-		//耗时:约250ms
+		//Step 7: 初始追踪,使用并行的fast-marching算法，或者说并行最短路算法
+		//将会从泊松采样提供的种子开始扩展，每个种子扩展出一部分分支。
+		//Step 7: Initial neuron tracing, using parallel fast-marching algorithm, or parallel shortest path algorithm.
+		//The algorithm will start from the sampled seeds in parallel, and generate multi traced branches.
 
 		short int* d_seedNumberPtr;
 		uchar* d_activeMat_compact;
 		cudaMalloc((void**)&d_activeMat_compact, sizeof(uchar) * newSize);
-		cudaMemset(d_activeMat_compact, FARAWAY, sizeof(uchar) * newSize);
+		cudaMemset(d_activeMat_compact, FAR, sizeof(uchar) * newSize);
 
 		cudaMalloc((void**)& d_seedNumberPtr, sizeof(short int) * newSize);
 		cudaMemset(d_seedNumberPtr, 0, sizeof(short int) * newSize);
@@ -389,16 +334,17 @@ int main(int argc, char* argv[])
 		timer.update();
 
 		std::cerr << "[Breakdown] Total Init Generating Cost: " << timer3.getTimerMilliSec() << "ms" << std::endl << std::endl;
-		//fprintf(breakDownFile, "%.2lf ", timer3.getTimerMilliSec());
 		timer3.update();
 
 		//Step 8: 分支合并算法
+		//Step 8: Merging the result of initial tracing.
 		//耗时:约50ms
 		std::vector<int> leafArr;
 		int leafCount = 0;
 		int validLeafCount = 0;
 
 		//并查集，用于判断不同分支之间是否进行了合并
+		//disjoint set for checking the merging status.
 		std::vector<int> disjointSet(seedArr.size() + 1, 0);
 		for (int it = 0; it < disjointSet.size(); it++)
 			disjointSet[it] = it;
@@ -407,17 +353,12 @@ int main(int argc, char* argv[])
 		cudaMalloc(&d_disjointSet, sizeof(int) * disjointSet.size());
 		cudaMemcpy(d_disjointSet, &(disjointSet[0]), sizeof(int) * disjointSet.size(), cudaMemcpyHostToDevice);
 
-
-
-
-		//std::cerr << "disjointSet size: " << disjointSet.size() <<  std::endl;
 		mergeSegments(seedArr, disjointSet, width, height, slice, newSize, d_imagePtr, d_imagePtr_compact, d_compress, d_decompress, d_childNumMat, d_radiusMat_compact, d_parentPtr_compact, d_seedNumberPtr, d_disjointSet);
 
 		std::cerr << "MergeSegments cost: " << timer.getTimerMilliSec() << "ms" << std::endl << std::endl;
 		timer.update();
 
 		std::cerr << "[Breakdown] Total Merging Cost: " << timer3.getTimerMilliSec() << "ms" << std::endl << std::endl;
-		//fprintf(breakDownFile, "%.2lf ", timer3.getTimerMilliSec());
 		timer3.update();
 
 		cudaDeviceSynchronize();
@@ -429,9 +370,9 @@ int main(int argc, char* argv[])
 		}
 
 
-		///Step 9: 最终剪枝
-		//耗时:约350ms
-		pruneLeaf_3d_gpu(leafArr, validLeafCount, disjointSet, width, height, slice, newSize, d_radiusMat_compact, d_imagePtr, d_imagePtr_compact, d_compress, d_decompress, d_parentPtr_compact, d_activeMat_compact, d_childNumMat, d_seedNumberPtr, d_disjointSet);
+		//Step 9: 最终剪枝. 输出结果为swc格式。
+		//Step 9: The final pruning process. The output is in swc format.
+		pruneLeaf_3d_gpu(leafArr, validLeafCount, disjointSet, width, height, slice, newSize, d_radiusMat_compact, d_imagePtr, d_imagePtr_compact, d_compress, d_decompress, d_parentPtr_compact, d_activeMat_compact, d_childNumMat, d_seedNumberPtr, d_disjointSet, inputName);
 		//pruning
 		std::cerr << "After Pruning" << std::endl;
 		std::cerr << validLeafCount << std::endl;
@@ -457,16 +398,11 @@ int main(int argc, char* argv[])
 		
 
 		std::cerr << "[Breakdown] Total Pruning Cost: " << timer3.getTimerMilliSec() << "ms" << std::endl << std::endl;
-		//fprintf(breakDownFile, "%.2lf ", timer3.getTimerMilliSec());
 		timer3.update();
 
 
 		std::cerr << "Total time cost: " << timer2.getTimerMilliSec() << "ms" << std::endl;
-		//fprintf(breakDownFile, "%.2lf\n", timer2.getTimerMilliSec());
 		timer2.update();
-
-		
-		//fclose(breakDownFile);
 	}
 
 	return 0;

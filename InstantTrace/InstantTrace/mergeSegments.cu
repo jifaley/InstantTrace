@@ -2,9 +2,11 @@
 #include "fastmarching.h"
 #include "TimerClock.hpp"
 
-#define __NO__MERGE
+////If one want to test the result without merging, use this option.
+//#define __NO__MERGE
 
-
+//disjoint set
+//并查集
 __device__ int getfather_gpu(int* d_disjointSet, int x)
 {
 	if (d_disjointSet[x] == x) return x;
@@ -42,10 +44,21 @@ __device__ void merge_gpu(int* d_disjointSet, uchar* d_seedRadiusMat, int x, int
 /*
 函数:findInterSectKernel
 功能:逐个查看某个点是否是两个分支的交叉点，并且将所有的交叉点放入一个队列中。
-判断是否是交叉点：如果该点的top-2对应的分支和top-1对应的分支不同。
+判断是否是交叉点：如果该点的top-2对应的分支和top-1对应的分支不同(定义详见fastmarching部分)。
 由于队列需要进行原子操作,因此选择了使用share memory，在每个block内部建立一个小型队列，最后再合并成主队列。
 mergeSegments()所有操作加起来<50ms，因此没有将互斥锁改为流压缩。
-seedNumber: 记录该节点由哪个种子扩展而来
+d_seedNumberPtr: 记录该节点由哪个种子扩展而来
+*/
+/*
+Funciton:findInterSectKernel
+Work:Checking if a node is an intersect of two neuron branches. All of the intersects are stored into an array(or,queue).
+Implementation: If the node's top-2 parent and top-1 parent are extended from different seeds (see fastmarching.cu for detail)
+it is regarded as an intersect.
+The queue operations are based on atomic operations. We optimized this implementation using atomic operations in shared memory:
+in each block, we build a small queue using shared-memory-atomic operations, and combine these small blocks to a global array.
+These atomic operations can be replaced by stream compaction, but the whole mergeSegments() function runs very fast, so there 
+is little performance gain can be reach by stream compaction.
+d_seedNumberPtr: The current voxel is extended from which seed.
 */
 __global__ void findInterSectKernel(int * d_compress, int* d_decompress, int* d_parentPtr_compact, short int* d_seedNumberPtr, int width, int height, int slice, int newSize, int* queue, int* queueHead, int* queueLock, int queueMaxSize)
 {
@@ -122,6 +135,7 @@ __global__ void findInterSectKernel(int * d_compress, int* d_decompress, int* d_
 	__syncthreads();
 
 	//将share memory里面的东西拷贝到总队列中
+	//combine the local queues to a global array
 	if (threadIdx.x < *localQueueHead)
 	{
 		queue[*offset + threadIdx.x] = localQueue[threadIdx.x];
@@ -132,6 +146,7 @@ __global__ void findInterSectKernel(int * d_compress, int* d_decompress, int* d_
 函数:chlcChldKernel
 功能:逐个更新每个点的child数量(暴力更新)
 */
+//renew the number of child of the nodes
 __global__ void calcChildKernel(int* d_compress, int* d_decompress, int* d_parentMat, int* d_childNumPtr, int width, int height, int slice, int newSize)
 {
 	int smallIdx = blockDim.x * blockIdx.x + threadIdx.x;
@@ -147,6 +162,13 @@ __global__ void calcChildKernel(int* d_compress, int* d_decompress, int* d_paren
 功能:逐个查看每个交叉点是否有效。
 有效的标准：如果Top-1 parent和 Top-2 parent 沿着父亲信息一路向他们分别对应的根前进，
 如果一路上属于的分支都没有发生改变，就是有效的。否则，在接下来合并两个分支时，可能牵扯到其他分支从而发生错误。
+*/
+/*
+Function:interSectCheckKernel
+Work:Checking if one intersect is valid.
+Implementation：The checking are started from the top-1 and top-2 parent of the intersect. Moving along the chind->parent 
+edge until reach the seed point. If all of the voxels along this path belongs to the same seed, the node is a valid intersect.
+Otherwise, errors may occur when merging the two branches.
 */
 __global__ void interSectCheckKernel(int* d_compress, int* d_decompress, int* d_interSectArr, int interSectNum, uchar* d_interSectValid, int* d_parentMat, short int* d_seedNumberPtr, int* counter, int width, int height, int slice, int newSize)
 {
@@ -199,6 +221,14 @@ __global__ void interSectCheckKernel(int* d_compress, int* d_decompress, int* d_
 
 }
 
+/*
+函数:interSectProcessKernel
+功能:当合并两个分支时，将一个分支的father信息更新。
+*/
+/*
+Function:interSectProcessKernel
+Work:Renew the "father"(or parent) information of the branches when merging.
+*/
 __global__ void interSectProcessKernel(int* d_compress, int* d_decompress, int* d_interSectArr, int interSectNum, uchar* d_interSectValid, int* d_parentMat, short int* d_seedNumberPtr, uchar* d_seedRadiusMat, int* d_disjointSet, int width, int height, int slice, int newSize)
 {
 	if (threadIdx.x != 0) return;
@@ -215,18 +245,21 @@ __global__ void interSectProcessKernel(int* d_compress, int* d_decompress, int* 
 		int parentSeed = d_seedNumberPtr[parentSmallIdx];
 		int parent2Seed = d_seedNumberPtr[parent2SmallIdx];
 
-		//从现在保证valid了
 		int father1 = getfather_gpu(d_disjointSet, curSeed);
 		int father2 = getfather_gpu(d_disjointSet, parent2Seed);
 		int prevIdxTemp, nextIdxTemp, curIdxTemp;
 		//printf("%d %d %d %d %d %d\n", it, curIdx, father1, father2, d_radiusMat[father1], d_radiusMat[father2]);
 		//father不一样才要合并
+		//merge branches have different father in the disjoint set
 		if (father1 != father2)
 		{
 			int r1 = d_seedRadiusMat[father1];
 			int r2 = d_seedRadiusMat[father2];
 			//std::cerr << "Merge:" << father1 << ' ' << father2 << std::endl;
-			//小的当根,从parent2开始,逐渐反过来,parnet2的parent改为cur
+			//半径大或者序号小的当根,从parent2开始,逐渐反过来,parnet2的parent改为cur
+			//The branch with larger seed radius or smaller seed index becomes the new root of the merged branch.
+
+			//The merging 
 			//if (father1 < father2)
 			if (r1 > r2 || (r1 == r2 && father1 < father2))
 			{
@@ -238,18 +271,20 @@ __global__ void interSectProcessKernel(int* d_compress, int* d_decompress, int* 
 					nextIdxTemp = d_parentMat[curIdxTemp];
 
 					//1.修改
+					//1.modify
 					d_parentMat[curIdxTemp] = prevIdxTemp;
 					//2.前进
+					//2.forward
 					prevIdxTemp = curIdxTemp;
 					curIdxTemp = nextIdxTemp;
 				}
 				//确保走到root后，root本身的parent收到了修改
+				//Move along the path until the seed point is reached
 				if (d_parentMat[curIdxTemp] == curIdxTemp && curIdxTemp != prevIdxTemp)
 				{
 					d_parentMat[curIdxTemp] = prevIdxTemp;
 				}
 			}
-			//小的当根,从cur开始,逐渐反过来,cur的parent改为parent2
 			//else if (father1 > father2)
 			else
 			{
@@ -279,6 +314,7 @@ __global__ void interSectProcessKernel(int* d_compress, int* d_decompress, int* 
 }
 
 //为了防止并查集的结果不够新，对所有点再次进行getfather()
+//Renew the informatiion in the disjoint set
 __global__ void renewColorKernel(int totalColor, int* d_disjointSet)
 {
 	if (threadIdx.x != 0) return;
@@ -299,7 +335,18 @@ void getSeedRadius(int* d_seedArr, int* d_compress, uchar* d_seedRadiusMat, ucha
 }
 
 
-
+/*
+函数:mergeSegments
+功能:在初始追踪完成之后，对相遇的神经分支进行合并
+输入:种子点集合 seedArr, 原图d_imagePtr, 半径信息d_radiusMat, 
+分支归属种子点信息d_seedNumberPtr, 并查集d_disjointset
+*/
+/*
+Function:mergeSegments
+Work:merge the connected branches after constructing initial neuron.
+Input: seedArr(The seed set), d_imagePtr(The image), d_radiusMat(The control radius of voxels),
+d_seedNumberPtr(The voxel is extended from which seed point), d_disjointset
+*/
 void mergeSegments(std::vector<int>& seedArr, std::vector<int>& disjointSet, int width, int height, int slice, int newSize, uchar* d_imagePtr, uchar* d_imagePtr_compact, int* d_compress, int* d_decompress, int* d_childNumMat, uchar* d_radiusMat_compact, int* d_parentPtr_compact, short int* d_seedNumberPtr, int* d_disjointSet)
 {
 	TimerClock timer;
@@ -316,9 +363,10 @@ void mergeSegments(std::vector<int>& seedArr, std::vector<int>& disjointSet, int
 	//判断一下每个交点附近是否有他的两个父亲
 
 	//01 查找InterSect
+	//01 Finding the intersect of branches
 
 	cudaError_t errorCheck;
-	const int queueSize = 5000000; //查找上限,多了就不要了
+	const int queueSize = 5000000; //max number of intersects
 	int* queue = (int*)malloc(sizeof(int) * queueSize);
 	int* d_queue;
 	cudaMalloc(&d_queue, sizeof(int) * queueSize);
@@ -349,6 +397,7 @@ void mergeSegments(std::vector<int>& seedArr, std::vector<int>& disjointSet, int
 
 
 	//02 检查InterSect
+	//02 Checking if the intersect is valid (only relate to two branches)
 	int countValidInterSect = 0;
 	int * d_parentMat_compact = d_parentPtr_compact;
 
@@ -378,12 +427,14 @@ void mergeSegments(std::vector<int>& seedArr, std::vector<int>& disjointSet, int
 
 #ifdef __NO__MERGE
 	//如果想测试不合并的结果，使用下面的代码
+	//If one want to test the result without merging, use this option.
 	cudaMemset(d_interSectValid, 0, sizeof(uchar) * interSectNum);
 #endif // __NO__MERGE
 
 
 	//03 Merge
-	int totalColor = seedArr.size(); //0号好像不用
+	int totalColor = seedArr.size(); 
+	//Hint: The indices of seeds are started from 1. The 0th seed is a dummy seed.
 	uchar* d_seedRadiusMat;
 	cudaMalloc(&d_seedRadiusMat, sizeof(int) * totalColor);
 
@@ -406,6 +457,7 @@ void mergeSegments(std::vector<int>& seedArr, std::vector<int>& disjointSet, int
 	timer.update();
 
 	//04 重新统计childNum
+	//04 Renew the number of childs
 
 	cudaMemset(d_childNumMat, 0, sizeof(int) * newSize);
 	calcChildKernel << <(newSize - 1) / 256 + 1, 256 >> > (d_compress, d_decompress, d_parentPtr_compact, d_childNumMat, width, height, slice, newSize);
@@ -437,6 +489,7 @@ void mergeSegments(std::vector<int>& seedArr, std::vector<int>& disjointSet, int
 
 
 //一个用来检查错误的模板
+//a template for checking if two arrays identical
 template<typename T>
 void crosscheck(const T* d_arr1, const T* d_arr2, int arrSize)
 {

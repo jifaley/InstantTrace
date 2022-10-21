@@ -3,13 +3,7 @@
 #include <iostream>
 #include "loadTiff.h"
 
-
-namespace config
-{
-	const int __USE__DIST26__CONST = 1;
-}
-
-
+//Some utils or definations
 
 typedef unsigned char uchar;
 
@@ -32,11 +26,6 @@ void getFiles(std::string path, std::vector<std::string>& files, std::vector<std
 enum
 {
 	FAR, TRIAL, ALIVE, DARKLEAF_PRUNED
-};
-
-enum
-{
-	FARAWAY, ACTIVE, PASSIVE, Potential
 };
 
 

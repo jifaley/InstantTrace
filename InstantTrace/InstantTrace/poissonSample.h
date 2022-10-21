@@ -15,12 +15,7 @@
 #include <thrust/iterator/counting_iterator.h>
 
 //泊松采样根据Wei et al.的 Parallel Poisson Disk Sampling 实现，并未进行充分优化
-
-int doPoissonSample(std::vector<int>& seedArr, dim3 center, int centerRadius, int width, int height, int slice,int newSize, uchar* d_imagePtr, uchar* d_imagePtr_compact, int* d_compress, int* d_decompress);
-
-
-int doPoissonSample_cpu(std::vector<int>& seedArr, dim3 center, int centerRadius, int width, int height, int slice, int newSize, uchar* d_imagePtr, uchar* d_imagePtr_compact, int* d_compress, int* d_decompress);
-
+//L.-Y. Wei. Parallel poisson disk sampling. Acm Transactions On Graphics(tog), 27(3) : 1–9, 2008.
 
 int doPoissonSample2(std::vector<int>& seedArr, dim3 center, int centerRadius, int width, int height, int slice, int newSize, uchar* d_imagePtr, uchar* d_imagePtr_compact, int* d_compress, int* d_decompress);
 

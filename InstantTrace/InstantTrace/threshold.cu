@@ -73,6 +73,10 @@ int getGlobalThreshold(uchar* h_imagePtr, uchar* d_imagePtr, int width, int heig
 函数：addGlobalThreshold
 功能：给d_imagePtr 指向的图像添加全局阈值
 */
+/*
+Function：addGlobalThreshold
+Work: Adding global thresholding for d_imagePtr.
+*/
 void addGlobalThreshold(uchar* d_imagePtr, int width, int height, int slice, uchar threshold)
 {
 	is_less_than_th comp(threshold);
@@ -86,6 +90,15 @@ void addGlobalThreshold(uchar* d_imagePtr, int width, int height, int slice, uch
 根据：神经元信号一般相对背景来说是明亮的。
 缺点：会产生较为明显的分块效应，应该添加插值等修正方法。
 */
+/*
+Function：addLocalThreshold_Kernel
+Work：Adding local thresholding for d_imagePtr.
+Implemenation: First divide the whole space into blocks according to the blockSize. The intensity histogram are calculated
+in each block, and only the elements with the top 5% intensity in the block are kept.
+Explaination: The intensity of neuron branch is bright in common.
+Limitaion: This process may cause block effect. Users may add interpolation or other post-processing methods.
+*/
+
 __global__
 void addLocalThresholdKernel(uchar* inputPtr, int width, int height, int slice, int blockSize, int kmax, int imax, int jmax, int* d_localThresholdArr)
 {
@@ -173,13 +186,7 @@ void addLocalThresholdKernel(uchar* inputPtr, int width, int height, int slice, 
 }
 
 
-/*
-函数：addLocalThreshold
-功能：给d_imagePtr 指向的图像添加局部阈值
-实现：首先根据blockSize对整个图像分块，分别统计灰度直方图。只保留块内亮度排名前5%的值。
-根据：神经元信号一般相对背景来说是明亮的。
-缺点：会产生较为明显的分块效应，应该添加插值等修正方法。
-*/
+//See addLocalThreshold_Kernel
 void addLocalThreshold(uchar* d_imagePtr, int width, int height, int slice, int blockSize)
 {
 	int kmax = (slice - 1) / blockSize + 1;
@@ -222,6 +229,13 @@ void addLocalThreshold(uchar* d_imagePtr, int width, int height, int slice, int 
 功能：给d_imagePtr 指向的图像进行补充
 实现：对于足够亮的区域，将其周边的暗区灰度置为1
 根据：试图填补不同亮区之间的缝隙，使得后面追踪时能成功连接相邻的亮区
+*/
+/*
+Function：addDarkPaddingKernel
+Work：padding the image.
+Implemenation：For each bright area, set its neighboring background pixel's intensity from 0 to 1.
+Explaination: Try to fill the holes and gaps between different bright areas. The 0-valued elements will be removed
+in the later processes, but the 1-valued will not.
 */
 __global__
 void addDarkPaddingKernel(uchar* d_imagePtr, int width, int height, int slice, uchar threshold)
@@ -276,13 +290,8 @@ void addDarkPaddingKernel(uchar* d_imagePtr, int width, int height, int slice, u
 	}
 }
 
-/*
-函数：addDarkPadding
-功能：给d_imagePtr 指向的图像进行补充
-实现：对于足够亮的区域，将其周边的暗区灰度置为1
-根据：试图填补不同亮区之间的缝隙，使得后面追踪时能成功连接相邻的亮区
-*/
 
+//See addDarkPaddingKernel
 void addDarkPadding(uchar* d_imagePtr, int width, int height, int slice, uchar threshold)
 {
 	addDarkPaddingKernel << <(width * height * slice - 1) / 256 + 1, 256 >> > (d_imagePtr, width, height, slice, threshold);

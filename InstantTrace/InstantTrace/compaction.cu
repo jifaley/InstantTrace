@@ -22,6 +22,9 @@ struct is_zero {
 
 using thrust::placeholders::_1;
 
+//getCompressMap:compactImage的子函数，用于计算流压缩后的映射。d_compress为元素下标->压缩下标，d_decompress反之。
+//getCompressMap:The sub-function of compactImage. Calculating the mapping for stream compaction. The "d_compress" array
+//is the mapping from the original element index to the compressed element index. The "d_decompress" array is the inversed mapping.
 __global__
 void getCompressMap(int* d_compress, int* d_decompress, uchar* d_imagePtr, uchar* d_imagePtr_compact, int newSize)
 {
@@ -33,7 +36,6 @@ void getCompressMap(int* d_compress, int* d_decompress, uchar* d_imagePtr, uchar
 	d_imagePtr_compact[smallIdx] = d_imagePtr[fullIdx];
 }
 
-
 /*
 函数：compactImage
 功能：压缩原图，去除非0部分。 
@@ -42,6 +44,15 @@ void getCompressMap(int* d_compress, int* d_decompress, uchar* d_imagePtr, uchar
 将所有value< 0的部分删除后，剩余的tuple即为: (id0, value_id0), (id1, value_id1)...
 那么,剩余的value值即为压缩后的图，剩余的id即为压缩后的值对应的原图中的下标。
 实现：使用thrust库的copy_if 或者 remove_if 操作
+*/
+/*
+Function：compactImage
+Work：Compress the original image, leave out the zero-valued elements. (Also known as Stream Compaction)
+Output：d_compactedImagePtr(The compressed image)，d_compress (The compression mapping)，d_decompress(The decompression mapping)
+Implementaion：Binding the voxels and their indices to tuples, as the form of (0,value0), (1, value1), (2,value2)....
+After deleting the zero-valued tuples, the remainders are arranged as (id0, value_id0), (id1, value_id1)...
+Thus, these values form the compressed image, and these ids are the corresponding indices in the orginal image.
+This function can be implemented by thrust::copy_if or thrust::remove_if.
 */
 
 void compactImage(uchar* d_imagePtr, uchar* &d_imagePtr_compact, int* &d_compress, int* &d_decompress, int width, int height, int slice, int& newSize)
@@ -100,6 +111,8 @@ struct isValid_functor {
 };
 
 
+//功能：计算d_sequence数组中元素的x,y,z坐标平均值，然后找到距离平均值最近的元素。
+//Work：Calculating the average of x,y,z coordinates in the d_sequence array，and find the element nearest to this average coordinate.
 __global__
 void centerProcess(int* d_sequence, int* d_decompress, int maxSeedNum, int width, int height, int slice)
 {
@@ -147,17 +160,36 @@ void centerProcess(int* d_sequence, int* d_decompress, int maxSeedNum, int width
 	}
 }
 
+/*
+函数：getCenterPos
+功能：寻找Radius最大的点，作为胞体(soma)
+输出：maxPos(胞体的位置)，maxRadius(最大半径)
+思路：如果只找半径最大的点，可能会有很多相同的取值，容易偏斜；
+因此，我们将周围半径足够大的若干点的位置计算平均值，作为新的胞体中心。
+实现：使用thrust库的copy_if 或者 remove_if 操作
+*/
+/*
+Function：getCenterPos
+Work：Find the point with the largest radius, as the center of neuron soma.
+Output：maxPos(the location of soma)，maxRadius(the largest radius)
+Implementation：The element with the largest radius may not locates at the neuron center.
+We generate a lot of candidates with large radius, and calculate the center of them as the neuron center.
+*/
 void getCenterPos(int* d_compress, int* d_decompress, uchar* d_radiusMat_compact, int width, int height, int slice, int newSize, int&maxPos, int& maxRadius)
 {
 	thrust::device_ptr<uchar> d_ptr(d_radiusMat_compact);
 	thrust::device_ptr<uchar> iter = thrust::max_element(d_ptr, d_ptr + newSize);
 	maxRadius = *iter;
+	//首先通过max_element计算出最大半径的值
+	//Find the largest radius
 
 	printf("Init maxRadius: %d\n", maxRadius);
 	
 	int* d_sequence;
 	cudaMalloc(&d_sequence, sizeof(int) * newSize);
 
+	//我们将最大半径的4/5或者最大半径-5作为阈值，选出一些候选点；将这些候选点的中心作为胞体中心。
+	//The threshold radius for generating center candidates
 	uchar thresholdRadius = MAX(maxRadius * 4 / 5, maxRadius - 5);
 
 	int* d_copy_end = thrust::copy_if(thrust::device, thrust::make_counting_iterator<int>(0), thrust::make_counting_iterator<int>(newSize), d_radiusMat_compact, d_sequence,isValid_functor(thresholdRadius));
@@ -165,6 +197,7 @@ void getCenterPos(int* d_compress, int* d_decompress, uchar* d_radiusMat_compact
 
 	maxSeedNum = MIN(maxSeedNum, 512);
 
+	//计算d_sequence数组中元素的x,y,z坐标平均值，然后找到距离平均值最近的元素。
 	centerProcess << <1, maxSeedNum >> > (d_sequence, d_decompress, maxSeedNum, width, height, slice);
 
 	thrust::device_ptr<int> dp(d_sequence);

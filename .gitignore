@@ -5,14 +5,4 @@
 *.cubin
 *.fatbin
 *.dll
-<<<<<<< HEAD
 .vs/
-x64/
-data/
-Poisson_Samples/
-*.tif
-*.exe
-*.swc
-=======
-.vs/
->>>>>>> 3264a7a (2022_10_21 release_1)

@@ -1,7 +1,10 @@
 #include "pruning.h"
 
 //#define __NO__PRUNING
+//If one want to try generate resuls without pruning, use this option.
+
 //#define __UNIQUE__COLOR
+//If one want to try only keep the central neuron and drop others, use this option.
 
 struct swcPoint
 {
@@ -19,23 +22,30 @@ struct swcPoint
 
 //01 根据追踪结果(parent数组) ，将整个图划分为不重叠的segment。
 //每个segment含有如下信息: leafIdx(叶子)，rootIdx(根), length(总像素数量), parent(父亲分支)，score(评分，用于筛选边)
-//耗时：约35ms
+//01 According to the tracing result (the parent information array), split the whole node-link graph to non-overlapping segments.
+//A segment is a path from a leaf to a certain branch point or even seed. There is a one-to-one mapping between leaf nodes and segments.
+//A branch point belongs to the longest path who go through this branch point.
+//A segment includes these information: leafIdx, rootIdx, length(total pixel number along the path), parent(The higher-level segment), score(a metric used for filter segments)
 
 void constructSegment(std::vector<int>& leafArr, int width, int height, int slice, int newSize, uchar* d_imagePtr, uchar* d_imagePtr_compact, int* d_compress, int* d_decompress, int* d_parentMat_compact, uchar*  d_statusMat_compact, int* d_childNumMat_compact,
 	int*& d_segment_leafIdx, int*& d_segment_rootIdx, int*& d_segment_length, int*& d_segment_parent, float*& d_segment_score, int& segNumber, int darkLeafThreshold);
 
 //02 按照score进行剪枝，本步骤会删除绝大多数分支，剩下一些较长的分支
-//耗时:约5ms
+//02 Filter the segments by a threshold of score. This process will filter the most of the branches, and keep the long branches.
 void filterSegment(int* d_segment_leafIdx, int* d_segment_rootIdx, int* d_segment_length, int* d_segment_parent, float* d_segment_score, short int* d_seedNumberPtr, int* d_disjointSet, int* d_compress_outer, int totalColor, int scoreThreshold, int segNumber, int& segNumberFiltered);
 
 //04 输出值到SWC文件，需要得到每个点的坐标(x,y,z,半径r, 父亲parent, 颜色color)
-//耗时50ms
-void outputSwc(int* d_compress, int* d_decompress, int* d_parentMat_compact, uchar* d_radiusMat_compact, short int* d_seedNumberPtr, int* d_disjointSet, std::vector<int>& segment_leafIdx_final, std::vector<int>& segment_rootIdx_final, std::vector<int>& segment_length_final, int width, int height, int slice, int* d_segment_leafIdx, int* d_segment_rootIdx, int segNumberFiltered, int segNumberFinal);
+//04 Output in *.swc format. Every point have its x,y,z coordinate, control radius r, and color.
+void outputSwc(int* d_compress, int* d_decompress, int* d_parentMat_compact, uchar* d_radiusMat_compact, short int* d_seedNumberPtr, int* d_disjointSet, std::vector<int>& segment_leafIdx_final, std::vector<int>& segment_rootIdx_final, std::vector<int>& segment_length_final, int width, int height, int slice, int* d_segment_leafIdx, int* d_segment_rootIdx, int segNumberFiltered, int segNumberFinal, std::string inputName);
 
 
 /*
 函数:travelSegmentKernel
 作用:遍历分支，该分支上各个节点的index放入数组，以便下面进行并行处理
+*/
+/*
+Function:travelSegmentKernel
+Work: Travel through the whole neuron tree, and store the indices of nodes of segments.
 */
 
 __global__ void travelSegmentKernel(int* d_compress, int* d_decompress, int* d_parentMat_compact, int* d_segment_leafIdx, int* d_segment_rootIdx, int* d_segment_length, int* d_lengthPrefixSum, int* d_pointIdxMat, int segNumberFiltered)
@@ -65,11 +75,14 @@ __global__ void travelSegmentKernel(int* d_compress, int* d_decompress, int* d_p
 函数:fastCheckKernel
 作用:根据该分支的parent分支的保留情况，快速判断该分支是否保留
 */
+//A fast checking kernel for judging if current segment is to be pruned
 __global__ void fastCheckKernel(int* d_isSegKeep, int* d_isParentKeep)
 {
 	//如果parent保留，那么本分支也暂时保留(iskeep == 1)，交给下面的kernel判断是否丢弃；
 	//如果parent已经被丢弃，那么本分支直接标记为丢弃(iskeep == 0)
+	//If the parent segment have been pruned (iskeep==0) , the current segment will be pruned too.
 	*d_isSegKeep = *d_isParentKeep;
+
 	if (threadIdx.x == 0)
 	{
 		if (*d_isParentKeep == -1)
@@ -78,9 +91,10 @@ __global__ void fastCheckKernel(int* d_isSegKeep, int* d_isParentKeep)
 }
 
 /*
-函数:changeStatusKernel
+函数:calcSegKernel
 作用:统计某个分支上各个点是否已经被其他已经保留的分支所覆盖
 */
+//Calculate whether the current segment have been covered by other "valid" branches.
 __global__
 void calcSegKernel(uchar* d_imagePtr, uchar* d_coverImagePtr, int * d_pointIdxMat, int* d_isSegKeep, int start, int length, float* d_sumSigPtr, float* d_sumRdcPtr)
 {
@@ -96,12 +110,12 @@ void calcSegKernel(uchar* d_imagePtr, uchar* d_coverImagePtr, int * d_pointIdxMa
 		//已被覆盖了
 		if (oldValue != newValue)
 		{
-			//Rdc: 冗余区域
+			//Rdc: The redundant signal
 			atomicAdd(d_sumRdcPtr, oldValue);
 		}
 		else
 		{
-			//Sig: 有效信号
+			//Sig: The valid signal
 			atomicAdd(d_sumSigPtr, oldValue);
 		}
 	}
@@ -112,6 +126,7 @@ void calcSegKernel(uchar* d_imagePtr, uchar* d_coverImagePtr, int * d_pointIdxMa
 函数:changeStatusKernel
 作用:根据统计该分支覆盖率的情况，决定某个分支是否保留
 */
+//Decide whether current segment is to be pruned according to result of calcSegKernel().
 __global__ void changeStatusKernel(int* d_isSegKeep, float* d_sumSigPtr, float* d_sumRdcPtr)
 {
 	//如果此时为0,说明刚才fastcheck发现该分支的parent被丢弃了，本分支也直接丢弃
@@ -125,6 +140,7 @@ __global__ void changeStatusKernel(int* d_isSegKeep, float* d_sumSigPtr, float* 
 	
 	//否则，根据刚才统计的被覆盖区域和未被覆盖区域的比值判断是否保留
 	//printf("\nBefore Change Status: %.2f %.2f %d\n", *d_sumSigPtr, *d_sumRdcPtr, d_isSegKeep[0]);
+	//When the cover ratio exceed certain threshold, prune it
 	if (d_sumRdcPtr[0] < 1 || d_sumSigPtr[0] / d_sumRdcPtr[0] > 1.0f / 9)
 	{
 		d_isSegKeep[0] = 1; //Keep
@@ -140,248 +156,15 @@ __global__ void changeStatusKernel(int* d_isSegKeep, float* d_sumSigPtr, float* 
 	//printf("\n After Change Status: %.2f %.2f %d\n", *d_sumSigPtr, *d_sumRdcPtr, d_isSegKeep[0]);
 }
 
-/*
-函数:deleteSegKernel（旧版，没有使用动态并行)
-作用:将某个分支覆盖的所有区域在整个图像中进行删除。
-*/
-__global__ void deleteSegKernel(int* d_compress, uchar* d_coverImagePtr, uchar* d_radiusMat_compact, int * d_pointIdxMat, int* d_isSegKeep, int start, int length, int width, int height, int slice)
-{
-	if (d_isSegKeep[0] == 0) return;
-	//如果保留分支，则在图中减去他所有的影响。否则不管
-	int idx = threadIdx.x + blockIdx.x*blockDim.x;
-	if (idx >= length) return;
-	int pointIdx = d_pointIdxMat[start + idx];
-	int smallIdx = d_compress[pointIdx];
-	int r = d_radiusMat_compact[smallIdx];
-	int z0 = pointIdx / (width * height);
-	int y0 = (pointIdx % (width * height)) / width;
-	int x0 = pointIdx % width;
-
-	for (int z = MAX(0, z0 - r); z <= MIN(z0 + r, slice - 1); z++)
-		for (int y = MAX(0, y0 - r); y <= MIN(y0 + r, height - 1); y++)
-			for (int x = MAX(0, x0 - r); x <= MIN(x0 + r, width - 1); x++)
-			{
-				if ((z - z0)*(z - z0) + (y - y0) * (y - y0) + (x - x0) * (x - x0) <= r * r)
-					d_coverImagePtr[z * width * height + y * width + x] = 0;
-			}
-}
-
 
 /*
 函数：deleteSegKernel（新版）
 功能：将某个分支覆盖的所有区域在整个图像中进行删除。本kernel为child kernel（使用了动态并行）。
-parent首先将所有工作平均分为GROUP_NUM组，然后child每个处理一组。
 */
-__global__
-void deleteSegKernel_group_child(int* d_compress, uchar* d_coverImagePtr,  int width, int height, int slice, int start, int* groupStartPos, int* groupStartOffset, int* groupEndPos, int* groupEndOffset,
-	int* d_pointIdxMat, uchar* d_radiusMat_compact)
-{
-	__shared__ int startPos, endPos, startOffset, endOffset;
-
-
-	///int idx = blockDim.x * blockIdx.x + threadIdx.x;
-	int groupId = blockIdx.x;
-	int threadId = threadIdx.x;
-	int threadPerGroup = blockDim.x;
-	int workId;
-	int bitMask_x = (width - 1) / 8 + 1;
-	int bitMask_y = (height - 1) / 8 + 1;
-	int bitMask_z = (slice - 1) / 8 + 1;
-
-	if (threadId == 0)
-	{
-		startPos = groupStartPos[groupId];
-		endPos = groupEndPos[groupId];
-		startOffset = groupStartOffset[groupId];
-		endOffset = groupEndOffset[groupId];
-	}
-
-	__syncthreads();
-	
-	//在启动这个child kernel之前，parent kernel 已经把所有的工作平均分为GROUP_NUM份；
-	//每一份工作从第startPos个节点到第endPos个节点。同时，由于工作量可能不能整除, 在头、尾
-	//分别记录一个offset，用于标记当前节点工作量中属于前一个组/后一个组的部分。
-	for (workId = startPos + threadId; workId < endPos; workId += threadPerGroup)
-	{
-		int pointIdx = d_pointIdxMat[start + workId];
-		int smallIdx = d_compress[pointIdx];
-
-		int r = d_radiusMat_compact[smallIdx];
-		int z0 = pointIdx / (width * height);
-		int y0 = (pointIdx % (width * height)) / width;
-		int x0 = pointIdx % width;
-		int zmin = MAX(0, z0 - r);
-		int zmax = MIN(z0 + r, slice - 1);
-		int ymin = MAX(0, y0 - r);
-		int ymax = MIN(y0 + r, height - 1);
-		int xmin = MAX(0, x0 - r);
-		int xmax = MIN(x0 + r, width - 1);
-
-		//zmax_new, zmin_new 不讲道理，无视slice限制，后面进行正确性修正
-		int surface_size = (2 * r + 1) * (2 * r + 1);
-
-		int zmin_new = zmin, zmax_new = zmax;
-
-		//如果是最前面的节点
-		if (workId == startPos)
-			zmin_new = z0 - r + (startOffset) / surface_size;
-
-		//如果是最后面的节点
-		if (workId == endPos)
-		{
-			if (endOffset > 0) //最后一项的offset是负的
-				zmax_new = z0 + r - (endOffset) / surface_size;
-		}
-
-		if (zmax_new >= zmin_new) //如果放缩是正确的
-		{
-			//进行正确性修正
-			zmin_new = MAX(0, zmin_new);
-			zmax_new = MIN(slice - 1, zmax_new);
-			zmax = zmax_new;
-			zmin = zmin_new;
-		}
-
-
-		for (int zIdx = zmin; zIdx <= zmax; zIdx++)
-			for (int yIdx = ymin; yIdx <= ymax; yIdx++)
-				for (int xIdx = xmin; xIdx <= xmax; xIdx++)
-				{
-					if ((zIdx - z0) * (zIdx - z0) + (yIdx - y0) * (yIdx - y0) + (xIdx - x0) * (xIdx - x0) <= r * r)
-					{
-						//if (d_coverImagePtr[zIdx * width * height + yIdx * width + xIdx] != 0)
-							d_coverImagePtr[zIdx * width * height + yIdx * width + xIdx] = 0;
-					}
-				}
-					
-	}
-}
-
-
-#define GROUP_NUM 32
-
 /*
-函数：deleteSegKernel（新版）
-功能：将某个分支覆盖的所有区域在整个图像中进行删除。本kernel为parent kernel（使用了动态并行）。
-parent首先将所有工作平均分为GROUP_NUM组，然后child每个处理一组。
+Function：deleteSegKernel
+Work：Delete the cover area of each nodes in a segment。This kernel is child kernel, and CUDA dynamic parallism is used.
 */
-__global__
-void deleteSegKernel_Dynamic(int* d_compress, uchar* d_coverImagePtr, uchar* d_radiusMat_compact, int * d_pointIdxMat, int* d_isSegKeep,int start, int length, int width, int height, int slice, int* d_groupStartPos, int* d_groupStartOffset, int* d_groupEndPos, int* d_groupEndOffset)
-{
-	int totalSize;
-	int groupStartPos[1024];
-	int groupStartOffset[1024];
-	int groupEndPos[1024];
-	int groupEndOffset[1024];
-
-	int prev_size, cur_size;
-
-	if (d_isSegKeep[0] == 0) return;
-	//如果保留分支，则在图中减去他所有的影响。否则不管
-
-	int r, pointIdx, tempSize;
-
-	totalSize = 0;
-	for (int i = 0; i < length; i++)
-	{
-		pointIdx = d_pointIdxMat[start + i];
-		int smallIdx = d_compress[pointIdx];
-		r = d_radiusMat_compact[smallIdx];
-		int tempSize = (2 * r + 1) * (2 * r + 1) * (2 * r + 1);
-		totalSize += tempSize;
-		//printf("id: %d, size: %d, totalSize: %d\n", i, tempSize, totalSize);
-	}
-
-	//下面将整个分支所有覆盖区域的workload平均分给group_num个组进行处理
-	
-
-	//prefixSum 可以每个kernel调用一次scan
-	int group_size = (totalSize % GROUP_NUM == 0) ?  totalSize / GROUP_NUM : totalSize / GROUP_NUM + 1;
-	//实际计算: (2*r + 1) ^ 3
-	//data: 1 2 3 2 2 2 2 1
-	//workload:27, 125, 343, 125, 125, 125, 125, 27
-	
-	int groupIdx = 0;
-
-	int workIdx = 0;
-	int curTotalWorkLoad = 0;
-	int curAssignedWorkLoad = 0;
-
-	int leftSideworkIdx = 0, rightSideworkIdx = 0;
-	groupStartPos[0] = 0;
-	groupStartOffset[0] = 0;
-
-
-	while (groupIdx < GROUP_NUM && workIdx < length)
-	{
-		//supply 计算workload, 直到超过一个组需要的量
-		while (curTotalWorkLoad < curAssignedWorkLoad + group_size && workIdx < length)
-		{
-			pointIdx = d_pointIdxMat[start + workIdx];
-			int smallIdx = d_compress[pointIdx];
-			r = d_radiusMat_compact[smallIdx];
-			//每个点工作量为以它为中心，半径为r的正方体
-			curTotalWorkLoad += (2 * r + 1) * (2 * r + 1) * (2 * r + 1);
-			rightSideworkIdx = workIdx;
-			workIdx++;
-		}
-
-		//assign 分配workload给下一个组，直到不够一个组需要的量
-		while (curAssignedWorkLoad <= curTotalWorkLoad - group_size)
-		{
-			curAssignedWorkLoad += group_size;
-
-			groupStartPos[groupIdx] = leftSideworkIdx;
-			groupEndPos[groupIdx] = rightSideworkIdx;
-			groupEndOffset[groupIdx] = curTotalWorkLoad - curAssignedWorkLoad;
-
-			if (groupIdx < GROUP_NUM -1)
-				groupStartOffset[groupIdx + 1] = curTotalWorkLoad - curAssignedWorkLoad;
-
-			if (curTotalWorkLoad - curAssignedWorkLoad != 0)
-				leftSideworkIdx = rightSideworkIdx;
-			else
-				leftSideworkIdx = rightSideworkIdx + 1;
-
-			groupIdx++;
-		}
-	}
-	//如果最后面还有不够的一组 
-
-	if (curAssignedWorkLoad < curTotalWorkLoad)
-	{
-		curAssignedWorkLoad += group_size;
-
-		groupStartPos[groupIdx] = leftSideworkIdx;
-		groupEndPos[groupIdx] = rightSideworkIdx;
-		groupEndOffset[groupIdx] = curTotalWorkLoad - curAssignedWorkLoad;
-		//此时的workload不够分了，最后一组的EndOffset是负的
-	}
-
-
-	//d_开头的为全局内存，在主kernel中用寄存器储存的数值放入全局内存，再分配给child kernel进行真正的处理
-	for (int i = 0; i < GROUP_NUM; i++)
-	{
-		d_groupStartPos[i] = groupStartPos[i];
-	}
-	for (int i = 0; i < GROUP_NUM; i++)
-	{
-		d_groupStartOffset[i] = groupStartOffset[i];
-	}
-	for (int i = 0; i < GROUP_NUM; i++)
-	{
-		d_groupEndPos[i] = groupEndPos[i];
-	}
-	for (int i = 0; i < GROUP_NUM; i++)
-	{
-		d_groupEndOffset[i] = groupEndOffset[i];
-	}
-
-	deleteSegKernel_group_child << < GROUP_NUM, 64 >> > (d_compress, d_coverImagePtr, width, height, slice, start,  d_groupStartPos, d_groupStartOffset, d_groupEndPos, d_groupEndOffset,
-		d_pointIdxMat, d_radiusMat_compact);
-}
-
-
 __global__
 void deleteSegKernel_Simple_child(uchar* d_coverImagePtr, int width, int height, int slice, int x0, int y0, int z0, int r)
 {
@@ -394,6 +177,7 @@ void deleteSegKernel_Simple_child(uchar* d_coverImagePtr, int width, int height,
 	if ((xPos - x0) * (xPos - x0) + (yPos - y0) * (yPos - y0) + (zPos - z0) * (zPos - z0) <= r * r)
 		d_coverImagePtr[zPos * width * height + yPos * width + xPos] = 0;
 }
+
 
 __global__
 void deleteSegKernel_Simple(int* d_compress, uchar* d_coverImagePtr, uchar* d_radiusMat_compact, int * d_pointIdxMat, int* d_isSegKeep, int start, int length, int width, int height, int slice, int* d_groupStartPos, int* d_groupStartOffset, int* d_groupEndPos, int* d_groupEndOffset)
@@ -422,6 +206,10 @@ void deleteSegKernel_Simple(int* d_compress, uchar* d_coverImagePtr, uchar* d_ra
 /*
 函数：darkSegmentFilterKernel
 功能：判断某个分支是否过暗，如果过暗，直接舍去
+*/
+/*
+Function：darkSegmentFilterKernel
+Work：If a segment is dark enough, prune it
 */
 __global__ void darkSegmentFilterKernel(uchar* d_imagePtr, int* d_parentMat_compact, int* d_compress, int* d_decompress, int _leafIdx, int _rootIdx, int* d_isSegKeep, int darkSegmentThreshold, int darkLeafThreshold)
 {
@@ -457,7 +245,9 @@ __global__ void darkSegmentFilterKernel(uchar* d_imagePtr, int* d_parentMat_comp
 }
 
 
-void pruneLeaf_3d_gpu(std::vector<int>& leafArr, int &validLeafCount, std::vector<int> & disjointSet, int width, int height, int slice, int newSize, uchar* d_radiusMat_compact, uchar* d_imagePtr, uchar* d_imagePtr_compact, int* d_compress, int* d_decompress, int* d_parentMat_compact, uchar*  d_statusMat_compact, int* d_childNumMat_compact, short int* d_seedNumberPtr, int * d_disjointSet)
+
+//The main function for pruning the reconstruction result after initial neuron tracing and merging.
+void pruneLeaf_3d_gpu(std::vector<int>& leafArr, int &validLeafCount, std::vector<int> & disjointSet, int width, int height, int slice, int newSize, uchar* d_radiusMat_compact, uchar* d_imagePtr, uchar* d_imagePtr_compact, int* d_compress, int* d_decompress, int* d_parentMat_compact, uchar*  d_statusMat_compact, int* d_childNumMat_compact, short int* d_seedNumberPtr, int * d_disjointSet, std::string inputName)
 {
 
 	cudaError_t errorCheck;
@@ -476,8 +266,11 @@ void pruneLeaf_3d_gpu(std::vector<int>& leafArr, int &validLeafCount, std::vecto
 	int segNumber;
 
 	//01 根据追踪结果(parent数组) ，将整个图划分为不重叠的segment。
-	//每个segment含有如下信息: leafIdx(叶子)，rootIdx(根), length(总像素数量), parent(父亲分支)，score(评分，用于筛选边)
-	//耗时：约35ms
+	//01 According to the tracing result (the parent information array), split the whole node-link graph to non-overlapping segments.
+	//A segment is a path from a leaf to a certain branch point or even seed. There is a one-to-one mapping between leaf nodes and segments.
+	//A branch point belongs to the longest path who go through this branch point.
+	//A segment includes these information: leafIdx, rootIdx, length(total pixel number along the path), parent(The higher-level segment), score(a metric used for filter segments)
+
 
 	constructSegment(leafArr, width, height, slice, newSize, d_imagePtr, d_imagePtr_compact, d_compress, d_decompress, d_parentMat_compact, d_statusMat_compact, d_childNumMat_compact,
 		d_segment_leafIdx, d_segment_rootIdx, d_segment_length, d_segment_parent, d_segment_score, segNumber, darkLeafThreshold);
@@ -497,10 +290,9 @@ void pruneLeaf_3d_gpu(std::vector<int>& leafArr, int &validLeafCount, std::vecto
 
 
 	//02 按照score进行剪枝，本步骤会删除绝大多数分支，剩下一些较长的分支
-	//耗时:约5ms
+	//02 Filter the segments by a threshold of score. This process will filter the most of the branches, and keep the long branches.
+
 	int lengthThreshold = 5;
-	lengthThreshold = 30;
-	lengthThreshold = 50;
 
 	lengthThreshold = 50;
 	//lengthThreshold = 10; //for flycircuits
@@ -551,7 +343,8 @@ void pruneLeaf_3d_gpu(std::vector<int>& leafArr, int &validLeafCount, std::vecto
 	//03 按照覆盖区域进行剪枝。当选择保留一个分支时，将它的所有影响区域在整个图中减去；
 	//判断是否保留分支，首先看它的父亲分支是否被保留(如果父亲丢弃了，儿子也要丢弃）,
 	//否则判断它被覆盖的程度，如果覆盖过多则丢弃，否则保留。
-	//耗时：约200ms
+	//03 Pruning according to the covering area. When choose to keep a segment, delete all of its cover area in the image.
+	//Whether a segment is pruned or kept is according to both its parent segment's status and its covering status.
 
 
 	double total_length = 0;
@@ -700,11 +493,6 @@ void pruneLeaf_3d_gpu(std::vector<int>& leafArr, int &validLeafCount, std::vecto
 
 				changeStatusKernel << <1, 1 >> > (d_isSegKeep + currentSeg, d_sumSigPtr + currentSeg, d_sumRdcPtr + currentSeg);
 
-				//deleteSegKernel_Dynamic << <1, 1 >> > (d_compress, d_coverImagePtr, d_radiusMat_compact, d_pointIdxMat, d_isSegKeep + currentSeg, start, length, width, height, slice, d_groupStartPos, d_groupStartOffset, d_groupEndPos, d_groupEndOffset);
-				
-				//如果不用dynamic parallel 就用下面这个kernel
-				//deleteSegKernel << <1, 1 >> > (d_compress, d_coverImagePtr, d_radiusMat_compact, d_pointIdxMat, d_isSegKeep, start, length, width, height, slice);
-
 				deleteSegKernel_Simple << <(length -1) / 32 + 1, 32 >> > (d_compress, d_coverImagePtr, d_radiusMat_compact, d_pointIdxMat, d_isSegKeep + currentSeg, start, length, width, height, slice, d_groupStartPos, d_groupStartOffset, d_groupEndPos, d_groupEndOffset);
 
 
@@ -773,12 +561,10 @@ void pruneLeaf_3d_gpu(std::vector<int>& leafArr, int &validLeafCount, std::vecto
 
 		if (parentSegIdx == -1)
 		{
-			//std::cerr << "A seg have parent -1 in line 1709" << std::endl;
-			//std::cerr << "curSeg: " << i << " parentSeg: " << parentSegIdx << std::endl;
+
 		}
 		else
 		{
-
 			if (isSegKeep[i] == 1 && isSegKeep[parentSegIdx] == 0)
 			{
 				std::cerr << "Violation of Topsort!" << std::endl;
@@ -834,11 +620,11 @@ void pruneLeaf_3d_gpu(std::vector<int>& leafArr, int &validLeafCount, std::vecto
 	
 
 	//04 输出值到SWC文件，需要得到每个点的坐标(x,y,z,半径r, 父亲parent, 颜色color)
-	//耗时50ms
+	//output to *.swc format
 
 	
 
-	outputSwc(d_compress, d_decompress, d_parentMat_compact, d_radiusMat_compact, d_seedNumberPtr, d_disjointSet, segment_leafIdx_final, segment_rootIdx_final, segment_length_final, width, height, slice, d_segment_leafIdx, d_segment_rootIdx, segNumberFiltered, segNumberFinal);
+	outputSwc(d_compress, d_decompress, d_parentMat_compact, d_radiusMat_compact, d_seedNumberPtr, d_disjointSet, segment_leafIdx_final, segment_rootIdx_final, segment_length_final, width, height, slice, d_segment_leafIdx, d_segment_rootIdx, segNumberFiltered, segNumberFinal, inputName);
 	std::cerr << "Output SWC Cost: " << timer.getTimerMilliSec() << "ms" << std::endl;
 	timer.update();
 
@@ -859,6 +645,11 @@ void pruneLeaf_3d_gpu(std::vector<int>& leafArr, int &validLeafCount, std::vecto
 功能:逐个查看某个点是否是叶子节点(没有child)，并且将所有的叶子放入一个队列中。
 由于队列需要进行原子操作,因此选择了使用share memory，在每个block内部建立一个小型队列，最后再合并成主队列。
 */
+/*
+Function:findLeafLocalQueueKernel
+Work:find all of the leaves in the tracing result, and put them into a queue. Shared memory and local queues are used for optimizaion.
+*/
+
 
 __global__ void findLeafLocalQueueKernel(uchar * d_imagePtr, int* d_decompress, uchar* d_statusMat_compact, int* d_childNumMat_compact, int width, int height, int slice, int newSize, int* queue, int* queueHead, int* queueLock, int queueMaxSize)
 {
@@ -941,6 +732,7 @@ __global__ void findLeafLocalQueueKernel(uchar * d_imagePtr, int* d_decompress, 
 功能: 将过暗的叶子节点删除，并重复这个动作，直到遇到分叉点或者足够亮的节点。
 本kernel的作用是从每个叶子开始向上查找，将这些需要删除的节点标记。
 */
+//Delete the leaves that is dark, and iterate this process until a branch point or bright point is met.
 __global__ void findDarkLeafKernel(uchar * d_imagePtr_compact, int* d_compress, int* d_decompress, uchar* d_statusMat_compact, int* d_childNumMat_compact, int* d_parentMat_compact, int* queue, int* queueHead, int darkLeafThreshold)
 {
 	int qhead = *queueHead;
@@ -969,6 +761,7 @@ __global__ void findDarkLeafKernel(uchar * d_imagePtr_compact, int* d_compress, 
 功能: 将过暗的叶子节点删除，并重复这个动作，直到遇到分叉点或者足够亮的节点。
 本kernel的作用是删除上一个kernel标记了的节点。
 */
+//Delete the points marked by the prevous kernel.
 __global__ void pruneDarkLeafKernel(uchar * d_imagePtr_compact, int* d_compress, int* d_decompress, int newSize, uchar* d_statusMat_compact, volatile int* d_childNumMat_compact, int* d_parentMat_compact, int darkLeafThreshold, int* lockArr, int lockArrSize)
 {
 	int smallIdx = threadIdx.x + blockDim.x * blockIdx.x;
@@ -1002,7 +795,7 @@ __global__ void pruneDarkLeafKernel(uchar * d_imagePtr_compact, int* d_compress,
 		}
 		d_childNumMat_compact[smallIdx] = 0;
 		d_parentMat_compact[smallIdx] = -1;
-		d_statusMat_compact[smallIdx] = FARAWAY;
+		d_statusMat_compact[smallIdx] = FAR;
 	}
 }
 
@@ -1050,27 +843,6 @@ static void calcChildKernel(int* d_compress, int* d_decompress, int* d_parentMat
 	}
 }
 
-__global__ void childNumRenewKernel_slow(uchar * d_imagePtr, int* d_compress, int* d_decompress, int* d_childNumMat_compact, int* d_parentMat_compact, uchar* d_visited, int* queue, int seedNum, int* lockArr, int lockArrSize)
-{
-
-	int idx = blockDim.x * blockIdx.x + threadIdx.x;
-
-	bool exitflag;
-	int smallIdx, parentSmallIdx;
-
-	for (int idx = 0; idx < seedNum; idx++)
-	{
-		smallIdx = queue[idx];
-		while (d_visited[smallIdx] == 0)
-		{
-			parentSmallIdx = d_parentMat_compact[smallIdx];
-			if (parentSmallIdx == smallIdx) break;
-			d_childNumMat_compact[parentSmallIdx] += 1;
-			d_visited[smallIdx] = 1;
-			smallIdx = parentSmallIdx;
-		}
-	}
-}
 
 __global__ void childNumRenewKernel_faster(uchar * d_imagePtr, int* d_compress, int* d_decompress, int* d_childNumMat_compact, int* d_parentMat_compact, uchar* d_visited, int* queue, int seedNum, int* lockArr, int lockArrSize)
 {
@@ -1388,7 +1160,6 @@ void constructSegment(std::vector<int>& leafArr, int width, int height, int slic
 	//输出比一下leaf的数量验证正确性	
 	cudaMemset(d_lockArr, 0, sizeof(int) * lockArrSize);
 
-	//似乎有问题，应该从queue出发！！！！！！！！！！
 	pruneDarkLeafKernel << <  (newSize - 1) / 256 + 1, 256 >> > (d_imagePtr_compact, d_compress, d_decompress, newSize, d_statusMat_compact, d_childNumMat_compact, d_parentMat_compact, darkLeafThreshold, d_lockArr, lockArrSize);
 	//cudaDeviceSynchronize();
 
@@ -1421,7 +1192,6 @@ void constructSegment(std::vector<int>& leafArr, int width, int height, int slic
 	cudaDeviceSynchronize();
 
 	cudaFree(d_visited);
-	//cudaFree(d_statusMat_compact);
 
 	int* d_farLeafIdx;
 	int* d_farLeafColor;
@@ -1563,8 +1333,6 @@ void getCompressMap_segment(int* d_compress, int* d_decompress, int* d_segment_l
 
 void filterSegment(int* d_segment_leafIdx, int* d_segment_rootIdx, int* d_segment_length, int* d_segment_parent, float* d_segment_score,  short int* d_seedNumberPtr, int* d_disjointSet,  int* d_compress_outer, int totalColor, int scoreThreshold, int segNumber, int& segNumberFiltered)
 {
-	//int lengthThreshold = 5;
-	//lengthThreshold = 50;
 
 	cudaError_t errorCheck;
 
@@ -1775,11 +1543,23 @@ bool smooth_curve_and_radius(std::vector<swcPoint*> & mCoord, int winsize);
 void smooth(std::vector<swcPoint> & vSwcPoint, std::vector<int> & vIsLeaf, std::vector<int> & vIsRoot, int winsize);
 
 
-void outputSwc(int* d_compress, int* d_decompress, int* d_parentMat_compact, uchar* d_radiusMat_compact, short int* d_seedNumberPtr, int* d_disjointSet, std::vector<int>& segment_leafIdx_final, std::vector<int>& segment_rootIdx_final, std::vector<int>& segment_length_final, int width, int height, int slice, int* d_segment_leafIdx, int* d_segment_rootIdx, int segNumberFiltered, int segNumberFinal)
+void outputSwc(int* d_compress, int* d_decompress, int* d_parentMat_compact, uchar* d_radiusMat_compact, short int* d_seedNumberPtr, int* d_disjointSet, std::vector<int>& segment_leafIdx_final, std::vector<int>& segment_rootIdx_final, std::vector<int>& segment_length_final, int width, int height, int slice, int* d_segment_leafIdx, int* d_segment_rootIdx, int segNumberFiltered, int segNumberFinal, std::string inputName)
 {
 	FILE* swc_out = nullptr;
 
-	fopen_s(&swc_out, "results//InstantTrace_0707.swc", "w+");
+	int last_slash_pos = inputName.find_last_of("\\");
+
+	std::string imageName;
+
+	if (last_slash_pos == std::string::npos)
+		imageName = inputName;
+	else
+		imageName = inputName.substr(last_slash_pos + 1, inputName.length() - last_slash_pos);
+
+
+	std::string output_path = std::string("results\\") + imageName + "_InstantTrace.swc";
+
+	fopen_s(&swc_out, output_path.c_str(), "w+");
 
 
 	int maxNumOfSwc = 0;
