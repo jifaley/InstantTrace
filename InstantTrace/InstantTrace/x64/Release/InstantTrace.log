@@ -1,0 +1,650 @@
+﻿  
+  D:\Documents\jifaley\code\Fast_Marching\InstantTrace\InstantTrace\InstantTrace>"D:\Documents\jifaley\software\CUDA\10.0\CUDA\bin\nvcc.exe" -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\VC\Tools\MSVC\14.16.27023\bin\HostX86\x64" -x cu  -ID:\Documents\jifaley\software\opencv\opencv\build\include -ID:\Documents\jifaley\software\opencv\opencv\build\include\opencv -ID:\Documents\jifaley\software\opencv\opencv\build\include\opencv2 -ID:\Documents\jifaley\software\libtiff\include -ID:\Documents\jifaley\software\CUDA\10.0\CUDA\include -ID:\Documents\jifaley\software\CUDA\10.0\CUDA\include     --keep-dir x64\Release -maxrregcount=0  --machine 64 --compile      -DWIN32 -DWIN64 -DNDEBUG -D_CONSOLE -D_MBCS -Xcompiler "/EHsc /W3 /nologo /O2  /FS /Zi  /MD " -o x64\Release\compaction.cu.obj "D:\Documents\jifaley\code\Fast_Marching\InstantTrace\InstantTrace\InstantTrace\compaction.cu" -clean 
+  compaction.cu
+  
+  D:\Documents\jifaley\code\Fast_Marching\InstantTrace\InstantTrace\InstantTrace>"D:\Documents\jifaley\software\CUDA\10.0\CUDA\bin\nvcc.exe" -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\VC\Tools\MSVC\14.16.27023\bin\HostX86\x64" -x cu  -ID:\Documents\jifaley\software\opencv\opencv\build\include -ID:\Documents\jifaley\software\opencv\opencv\build\include\opencv -ID:\Documents\jifaley\software\opencv\opencv\build\include\opencv2 -ID:\Documents\jifaley\software\libtiff\include -ID:\Documents\jifaley\software\CUDA\10.0\CUDA\include -ID:\Documents\jifaley\software\CUDA\10.0\CUDA\include     --keep-dir x64\Release -maxrregcount=0  --machine 64 --compile      -DWIN32 -DWIN64 -DNDEBUG -D_CONSOLE -D_MBCS -Xcompiler "/EHsc /W3 /nologo /O2  /FS /Zi  /MD " -o x64\Release\fastmarching.cu.obj "D:\Documents\jifaley\code\Fast_Marching\InstantTrace\InstantTrace\InstantTrace\fastmarching.cu" -clean 
+  fastmarching.cu
+  
+  D:\Documents\jifaley\code\Fast_Marching\InstantTrace\InstantTrace\InstantTrace>"D:\Documents\jifaley\software\CUDA\10.0\CUDA\bin\nvcc.exe" -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\VC\Tools\MSVC\14.16.27023\bin\HostX86\x64" -x cu  -ID:\Documents\jifaley\software\opencv\opencv\build\include -ID:\Documents\jifaley\software\opencv\opencv\build\include\opencv -ID:\Documents\jifaley\software\opencv\opencv\build\include\opencv2 -ID:\Documents\jifaley\software\libtiff\include -ID:\Documents\jifaley\software\CUDA\10.0\CUDA\include -ID:\Documents\jifaley\software\CUDA\10.0\CUDA\include     --keep-dir x64\Release -maxrregcount=0  --machine 64 --compile      -DWIN32 -DWIN64 -DNDEBUG -D_CONSOLE -D_MBCS -Xcompiler "/EHsc /W3 /nologo /O2  /FS /Zi  /MD " -o x64\Release\kernel.cu.obj "D:\Documents\jifaley\code\Fast_Marching\InstantTrace\InstantTrace\InstantTrace\kernel.cu" -clean 
+  kernel.cu
+  
+  D:\Documents\jifaley\code\Fast_Marching\InstantTrace\InstantTrace\InstantTrace>"D:\Documents\jifaley\software\CUDA\10.0\CUDA\bin\nvcc.exe" -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\VC\Tools\MSVC\14.16.27023\bin\HostX86\x64" -x cu  -ID:\Documents\jifaley\software\opencv\opencv\build\include -ID:\Documents\jifaley\software\opencv\opencv\build\include\opencv -ID:\Documents\jifaley\software\opencv\opencv\build\include\opencv2 -ID:\Documents\jifaley\software\libtiff\include -ID:\Documents\jifaley\software\CUDA\10.0\CUDA\include -ID:\Documents\jifaley\software\CUDA\10.0\CUDA\include     --keep-dir x64\Release -maxrregcount=0  --machine 64 --compile      -DWIN32 -DWIN64 -DNDEBUG -D_CONSOLE -D_MBCS -Xcompiler "/EHsc /W3 /nologo /O2  /FS /Zi  /MD " -o x64\Release\mergeSegments.cu.obj "D:\Documents\jifaley\code\Fast_Marching\InstantTrace\InstantTrace\InstantTrace\mergeSegments.cu" -clean 
+  mergeSegments.cu
+  
+  D:\Documents\jifaley\code\Fast_Marching\InstantTrace\InstantTrace\InstantTrace>"D:\Documents\jifaley\software\CUDA\10.0\CUDA\bin\nvcc.exe" -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\VC\Tools\MSVC\14.16.27023\bin\HostX86\x64" -x cu  -ID:\Documents\jifaley\software\opencv\opencv\build\include -ID:\Documents\jifaley\software\opencv\opencv\build\include\opencv -ID:\Documents\jifaley\software\opencv\opencv\build\include\opencv2 -ID:\Documents\jifaley\software\libtiff\include -ID:\Documents\jifaley\software\CUDA\10.0\CUDA\include -ID:\Documents\jifaley\software\CUDA\10.0\CUDA\include     --keep-dir x64\Release -maxrregcount=0  --machine 64 --compile      -DWIN32 -DWIN64 -DNDEBUG -D_CONSOLE -D_MBCS -Xcompiler "/EHsc /W3 /nologo /O2  /FS /Zi  /MD " -o x64\Release\poissonSample.cu.obj "D:\Documents\jifaley\code\Fast_Marching\InstantTrace\InstantTrace\InstantTrace\poissonSample.cu" -clean 
+  poissonSample.cu
+  
+  D:\Documents\jifaley\code\Fast_Marching\InstantTrace\InstantTrace\InstantTrace>"D:\Documents\jifaley\software\CUDA\10.0\CUDA\bin\nvcc.exe" -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\VC\Tools\MSVC\14.16.27023\bin\HostX86\x64" -x cu  -ID:\Documents\jifaley\software\opencv\opencv\build\include -ID:\Documents\jifaley\software\opencv\opencv\build\include\opencv -ID:\Documents\jifaley\software\opencv\opencv\build\include\opencv2 -ID:\Documents\jifaley\software\libtiff\include -ID:\Documents\jifaley\software\CUDA\10.0\CUDA\include -ID:\Documents\jifaley\software\CUDA\10.0\CUDA\include     --keep-dir x64\Release -maxrregcount=0  --machine 64 --compile      -DWIN32 -DWIN64 -DNDEBUG -D_CONSOLE -D_MBCS -Xcompiler "/EHsc /W3 /nologo /O2  /FS /Zi  /MD " -o x64\Release\pruning.cu.obj "D:\Documents\jifaley\code\Fast_Marching\InstantTrace\InstantTrace\InstantTrace\pruning.cu" -clean 
+  pruning.cu
+  
+  D:\Documents\jifaley\code\Fast_Marching\InstantTrace\InstantTrace\InstantTrace>"D:\Documents\jifaley\software\CUDA\10.0\CUDA\bin\nvcc.exe" -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\VC\Tools\MSVC\14.16.27023\bin\HostX86\x64" -x cu  -ID:\Documents\jifaley\software\opencv\opencv\build\include -ID:\Documents\jifaley\software\opencv\opencv\build\include\opencv -ID:\Documents\jifaley\software\opencv\opencv\build\include\opencv2 -ID:\Documents\jifaley\software\libtiff\include -ID:\Documents\jifaley\software\CUDA\10.0\CUDA\include -ID:\Documents\jifaley\software\CUDA\10.0\CUDA\include     --keep-dir x64\Release -maxrregcount=0  --machine 64 --compile      -DWIN32 -DWIN64 -DNDEBUG -D_CONSOLE -D_MBCS -Xcompiler "/EHsc /W3 /nologo /O2  /FS /Zi  /MD " -o x64\Release\threshold.cu.obj "D:\Documents\jifaley\code\Fast_Marching\InstantTrace\InstantTrace\InstantTrace\threshold.cu" -clean 
+  threshold.cu
+  Compiling CUDA source file compaction.cu...
+  Compiling CUDA source file fastmarching.cu...
+  
+  D:\Documents\jifaley\code\Fast_Marching\InstantTrace\InstantTrace\InstantTrace>"D:\Documents\jifaley\software\CUDA\10.0\CUDA\bin\nvcc.exe" -gencode=arch=compute_35,code=\"sm_35,compute_35\" --use-local-env -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\VC\Tools\MSVC\14.16.27023\bin\HostX86\x64" -x cu -rdc=true -ID:\Documents\jifaley\software\opencv\opencv\build\include -ID:\Documents\jifaley\software\opencv\opencv\build\include\opencv -ID:\Documents\jifaley\software\opencv\opencv\build\include\opencv2 -ID:\Documents\jifaley\software\libtiff\include -ID:\Documents\jifaley\software\CUDA\10.0\CUDA\include -ID:\Documents\jifaley\software\CUDA\10.0\CUDA\include     --keep-dir x64\Release -maxrregcount=0  --machine 64 --compile -cudart static     -DWIN32 -DWIN64 -DNDEBUG -D_CONSOLE -D_MBCS -Xcompiler "/EHsc /W3 /nologo /O2 /Fdx64\Release\vc141.pdb /FS /Zi  /MD " -o x64\Release\compaction.cu.obj "D:\Documents\jifaley\code\Fast_Marching\InstantTrace\InstantTrace\InstantTrace\compaction.cu" 
+  
+  D:\Documents\jifaley\code\Fast_Marching\InstantTrace\InstantTrace\InstantTrace>"D:\Documents\jifaley\software\CUDA\10.0\CUDA\bin\nvcc.exe" -gencode=arch=compute_35,code=\"sm_35,compute_35\" --use-local-env -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\VC\Tools\MSVC\14.16.27023\bin\HostX86\x64" -x cu -rdc=true -ID:\Documents\jifaley\software\opencv\opencv\build\include -ID:\Documents\jifaley\software\opencv\opencv\build\include\opencv -ID:\Documents\jifaley\software\opencv\opencv\build\include\opencv2 -ID:\Documents\jifaley\software\libtiff\include -ID:\Documents\jifaley\software\CUDA\10.0\CUDA\include -ID:\Documents\jifaley\software\CUDA\10.0\CUDA\include     --keep-dir x64\Release -maxrregcount=0  --machine 64 --compile -cudart static     -DWIN32 -DWIN64 -DNDEBUG -D_CONSOLE -D_MBCS -Xcompiler "/EHsc /W3 /nologo /O2 /Fdx64\Release\vc141.pdb /FS /Zi  /MD " -o x64\Release\fastmarching.cu.obj "D:\Documents\jifaley\code\Fast_Marching\InstantTrace\InstantTrace\InstantTrace\fastmarching.cu" 
+  Compiling CUDA source file mergeSegments.cu...
+  Compiling CUDA source file pruning.cu...
+  Compiling CUDA source file kernel.cu...
+  Compiling CUDA source file poissonSample.cu...
+  Compiling CUDA source file threshold.cu...
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(824): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(1759): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(2621): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(3460): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(4403): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(5301): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(6212): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7093): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7892): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h(772): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h(1628): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\device_double_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\sm_20_intrinsics.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\sm_20_intrinsics.h(925): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\cuda_fp16.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(824): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(1759): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(2621): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(3460): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(4403): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(5301): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(6212): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7093): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7892): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h(772): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h(1628): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\device_double_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\sm_20_intrinsics.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\sm_20_intrinsics.h(925): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\cuda_fp16.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+  
+  D:\Documents\jifaley\code\Fast_Marching\InstantTrace\InstantTrace\InstantTrace>"D:\Documents\jifaley\software\CUDA\10.0\CUDA\bin\nvcc.exe" -gencode=arch=compute_35,code=\"sm_35,compute_35\" --use-local-env -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\VC\Tools\MSVC\14.16.27023\bin\HostX86\x64" -x cu -rdc=true -ID:\Documents\jifaley\software\opencv\opencv\build\include -ID:\Documents\jifaley\software\opencv\opencv\build\include\opencv -ID:\Documents\jifaley\software\opencv\opencv\build\include\opencv2 -ID:\Documents\jifaley\software\libtiff\include -ID:\Documents\jifaley\software\CUDA\10.0\CUDA\include -ID:\Documents\jifaley\software\CUDA\10.0\CUDA\include     --keep-dir x64\Release -maxrregcount=0  --machine 64 --compile -cudart static     -DWIN32 -DWIN64 -DNDEBUG -D_CONSOLE -D_MBCS -Xcompiler "/EHsc /W3 /nologo /O2 /Fdx64\Release\vc141.pdb /FS /Zi  /MD " -o x64\Release\mergeSegments.cu.obj "D:\Documents\jifaley\code\Fast_Marching\InstantTrace\InstantTrace\InstantTrace\mergeSegments.cu" 
+  
+  D:\Documents\jifaley\code\Fast_Marching\InstantTrace\InstantTrace\InstantTrace>"D:\Documents\jifaley\software\CUDA\10.0\CUDA\bin\nvcc.exe" -gencode=arch=compute_35,code=\"sm_35,compute_35\" --use-local-env -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\VC\Tools\MSVC\14.16.27023\bin\HostX86\x64" -x cu -rdc=true -ID:\Documents\jifaley\software\opencv\opencv\build\include -ID:\Documents\jifaley\software\opencv\opencv\build\include\opencv -ID:\Documents\jifaley\software\opencv\opencv\build\include\opencv2 -ID:\Documents\jifaley\software\libtiff\include -ID:\Documents\jifaley\software\CUDA\10.0\CUDA\include -ID:\Documents\jifaley\software\CUDA\10.0\CUDA\include     --keep-dir x64\Release -maxrregcount=0  --machine 64 --compile -cudart static     -DWIN32 -DWIN64 -DNDEBUG -D_CONSOLE -D_MBCS -Xcompiler "/EHsc /W3 /nologo /O2 /Fdx64\Release\vc141.pdb /FS /Zi  /MD " -o x64\Release\kernel.cu.obj "D:\Documents\jifaley\code\Fast_Marching\InstantTrace\InstantTrace\InstantTrace\kernel.cu" 
+  
+  D:\Documents\jifaley\code\Fast_Marching\InstantTrace\InstantTrace\InstantTrace>"D:\Documents\jifaley\software\CUDA\10.0\CUDA\bin\nvcc.exe" -gencode=arch=compute_35,code=\"sm_35,compute_35\" --use-local-env -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\VC\Tools\MSVC\14.16.27023\bin\HostX86\x64" -x cu -rdc=true -ID:\Documents\jifaley\software\opencv\opencv\build\include -ID:\Documents\jifaley\software\opencv\opencv\build\include\opencv -ID:\Documents\jifaley\software\opencv\opencv\build\include\opencv2 -ID:\Documents\jifaley\software\libtiff\include -ID:\Documents\jifaley\software\CUDA\10.0\CUDA\include -ID:\Documents\jifaley\software\CUDA\10.0\CUDA\include     --keep-dir x64\Release -maxrregcount=0  --machine 64 --compile -cudart static     -DWIN32 -DWIN64 -DNDEBUG -D_CONSOLE -D_MBCS -Xcompiler "/EHsc /W3 /nologo /O2 /Fdx64\Release\vc141.pdb /FS /Zi  /MD " -o x64\Release\poissonSample.cu.obj "D:\Documents\jifaley\code\Fast_Marching\InstantTrace\InstantTrace\InstantTrace\poissonSample.cu" 
+  
+  D:\Documents\jifaley\code\Fast_Marching\InstantTrace\InstantTrace\InstantTrace>"D:\Documents\jifaley\software\CUDA\10.0\CUDA\bin\nvcc.exe" -gencode=arch=compute_35,code=\"sm_35,compute_35\" --use-local-env -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\VC\Tools\MSVC\14.16.27023\bin\HostX86\x64" -x cu -rdc=true -ID:\Documents\jifaley\software\opencv\opencv\build\include -ID:\Documents\jifaley\software\opencv\opencv\build\include\opencv -ID:\Documents\jifaley\software\opencv\opencv\build\include\opencv2 -ID:\Documents\jifaley\software\libtiff\include -ID:\Documents\jifaley\software\CUDA\10.0\CUDA\include -ID:\Documents\jifaley\software\CUDA\10.0\CUDA\include     --keep-dir x64\Release -maxrregcount=0  --machine 64 --compile -cudart static     -DWIN32 -DWIN64 -DNDEBUG -D_CONSOLE -D_MBCS -Xcompiler "/EHsc /W3 /nologo /O2 /Fdx64\Release\vc141.pdb /FS /Zi  /MD " -o x64\Release\pruning.cu.obj "D:\Documents\jifaley\code\Fast_Marching\InstantTrace\InstantTrace\InstantTrace\pruning.cu" 
+  
+  D:\Documents\jifaley\code\Fast_Marching\InstantTrace\InstantTrace\InstantTrace>"D:\Documents\jifaley\software\CUDA\10.0\CUDA\bin\nvcc.exe" -gencode=arch=compute_35,code=\"sm_35,compute_35\" --use-local-env -ccbin "C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\VC\Tools\MSVC\14.16.27023\bin\HostX86\x64" -x cu -rdc=true -ID:\Documents\jifaley\software\opencv\opencv\build\include -ID:\Documents\jifaley\software\opencv\opencv\build\include\opencv -ID:\Documents\jifaley\software\opencv\opencv\build\include\opencv2 -ID:\Documents\jifaley\software\libtiff\include -ID:\Documents\jifaley\software\CUDA\10.0\CUDA\include -ID:\Documents\jifaley\software\CUDA\10.0\CUDA\include     --keep-dir x64\Release -maxrregcount=0  --machine 64 --compile -cudart static     -DWIN32 -DWIN64 -DNDEBUG -D_CONSOLE -D_MBCS -Xcompiler "/EHsc /W3 /nologo /O2 /Fdx64\Release\vc141.pdb /FS /Zi  /MD " -o x64\Release\threshold.cu.obj "D:\Documents\jifaley\code\Fast_Marching\InstantTrace\InstantTrace\InstantTrace\threshold.cu" 
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/compaction.cu(121): warning : variable "minPos" was declared but never referenced
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(824): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(1759): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(2621): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(3460): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(4403): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(5301): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(6212): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7093): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7892): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h(772): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h(1628): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\device_double_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\sm_20_intrinsics.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\sm_20_intrinsics.h(925): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\cuda_fp16.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/fastmarching.cu(454): warning : integer conversion resulted in a change of sign
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/fastmarching.cu(455): warning : integer conversion resulted in a change of sign
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/fastmarching.cu(456): warning : integer conversion resulted in a change of sign
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/fastmarching.cu(430): warning : variable "tid" was declared but never referenced
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/fastmarching.cu(432): warning : variable "blockLength" was declared but never referenced
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/fastmarching.cu(433): warning : variable "blockOffset" was declared but never referenced
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/fastmarching.cu(513): warning : variable "warpOffset" was declared but never referenced
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/fastmarching.cu(638): warning : variable "errorCheck" was declared but never referenced
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/fastmarching.cu(681): warning : variable "blockNum" was declared but never referenced
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(824): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(1759): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(2621): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(3460): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(4403): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(5301): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(6212): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7093): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7892): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h(772): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h(1628): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\device_double_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\sm_20_intrinsics.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\sm_20_intrinsics.h(925): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\cuda_fp16.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/fastmarching.cu(1046): warning : variable "meanValue" was declared but never referenced
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/fastmarching.cu(1047): warning : variable "value" was declared but never referenced
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/fastmarching.cu(1125): warning : variable "offset" was declared but never referenced
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(824): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(1759): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(2621): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(3460): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(4403): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(5301): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(824): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(6212): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(1759): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7093): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(2621): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(3460): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(4403): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(5301): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(6212): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7093): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7892): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h(772): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h(1628): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7892): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\device_double_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h(772): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\sm_20_intrinsics.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h(1628): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\sm_20_intrinsics.h(925): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\device_double_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\cuda_fp16.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\sm_20_intrinsics.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\sm_20_intrinsics.h(925): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\cuda_fp16.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(824): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(1759): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(2621): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(3460): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(4403): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(5301): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(6212): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7093): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7892): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h(772): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h(1628): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\device_double_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\sm_20_intrinsics.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\sm_20_intrinsics.h(925): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\cuda_fp16.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/fastmarching.cu(10): warning : variable "smallqueueSize" was declared but never referenced
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/fastmarching.cu(11): warning : variable "smallqueueNumber" was declared but never referenced
+D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\thrust/system/cuda/detail/copy_if.h(753): warning : calling a __host__ function("thrust::detail::aligned_reinterpret_cast<int *, void *> ") from a __host__ __device__ function("thrust::cuda_cub::__copy_if::copy_if< ::thrust::cuda_cub::par_t,  ::thrust::counting_iterator<int,  ::thrust::use_default,  ::thrust::use_default,  ::thrust::use_default> , unsigned char *, int *,  ::thrust::detail::functional::actor< ::thrust::detail::functional::composite< ::thrust::detail::functional::binary_operator< ::thrust::not_equal_to> ,  ::thrust::detail::functional::actor< ::thrust::detail::functional::argument<(unsigned int)0u> > ,  ::thrust::detail::functional::value<int> ,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type> > > ") is not allowed
+D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\thrust/system/cuda/detail/copy_if.h(753): warning : calling a __host__ function("thrust::detail::aligned_reinterpret_cast<int *, void *> ") from a __host__ __device__ function("thrust::cuda_cub::__copy_if::copy_if< ::thrust::cuda_cub::par_t,  ::thrust::counting_iterator<int,  ::thrust::use_default,  ::thrust::use_default,  ::thrust::use_default> , unsigned char *, int *,  ::isValid_functor> ") is not allowed
+D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\thrust/system/cuda/detail/copy_if.h(753): warning : calling a __host__ function("thrust::detail::aligned_reinterpret_cast<int *, void *> ") from a __host__ __device__ function("thrust::cuda_cub::__copy_if::copy_if< ::thrust::cuda_cub::par_t,  ::thrust::counting_iterator<int,  ::thrust::use_default,  ::thrust::use_default,  ::thrust::use_default> , unsigned char *, int *,  ::thrust::detail::functional::actor< ::thrust::detail::functional::composite< ::thrust::detail::functional::binary_operator< ::thrust::not_equal_to> ,  ::thrust::detail::functional::actor< ::thrust::detail::functional::argument<(unsigned int)0u> > ,  ::thrust::detail::functional::value<int> ,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type> > > ") is not allowed
+D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\thrust/system/cuda/detail/extrema.h(354): warning : calling a __host__ function("thrust::detail::aligned_reinterpret_cast< ::thrust::tuple<unsigned char, long long,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type>  *, void *> ") from a __host__ __device__ function("thrust::cuda_cub::__extrema::extrema< ::thrust::cuda_cub::tag,  ::thrust::zip_iterator< ::thrust::tuple< ::thrust::device_ptr<unsigned char> ,  ::thrust::cuda_cub::counting_iterator_t<long long> ,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type> > , long long,  ::thrust::cuda_cub::__extrema::arg_max_f<unsigned char, long long,  ::thrust::less<unsigned char> > ,  ::thrust::tuple<unsigned char, long long,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type> > ") is not allowed
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/mergeSegments.cu(184): warning : variable "parentSeed" was declared but never referenced
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/mergeSegments.cu(245): warning : variable "parentSeed" was declared but never referenced
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/mergeSegments.cu(401): warning : variable "countValidInterSect" was declared but never referenced
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/poissonSample.cu(324): warning : variable "curImpSmallIdx" was declared but never referenced
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/mergeSegments.cu(402): warning : variable "d_parentMat_compact" was declared but never referenced
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/poissonSample.cu(335): warning : variable "neighborImpSmallIdx" was declared but never referenced
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/poissonSample.cu(679): warning : variable "nz" was set but never used
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/poissonSample.cu(716): warning : variable "curlenXYZ" was declared but never referenced
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/poissonSample.cu(384): warning : variable "r1" was set but never used
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/poissonSample.cu(384): warning : variable "r2" was set but never used
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/poissonSample.cu(387): warning : variable "sumValue" was declared but never referenced
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/poissonSample.cu(388): warning : variable "meanValue" was declared but never referenced
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/poissonSample.cu(389): warning : variable "value" was declared but never referenced
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/poissonSample.cu(396): warning : variable "dimension" was declared but never referenced
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/poissonSample.cu(431): warning : variable "num" was set but never used
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/poissonSample.cu(570): warning : variable "gen" was declared but never referenced
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/pruning.cu(355): warning : variable "pointCounter" was declared but never referenced
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/pruning.cu(447): warning : variable "filterByDarkSegment" was declared but never referenced
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/pruning.cu(902): warning : variable "index" was declared but never referenced
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/pruning.cu(925): warning : variable "value" was set but never used
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/pruning.cu(928): warning : variable "parentValue" was set but never used
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/pruning.cu(1082): warning : variable "parentIdx" was set but never used
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/pruning.cu(1462): warning : variable "parentIdx" was declared but never referenced
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/kernel.cu(230): warning : non-void function "main" should return a value
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/kernel.cu(301): warning : non-void function "main" should return a value
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/pruning.cu(1615): warning : variable "multicounter" was declared but never referenced
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/kernel.cu(369): warning : non-void function "main" should return a value
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/kernel.cu(244): warning : variable "maxpos" was declared but never referenced
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/kernel.cu(343): warning : variable "leafCount" was declared but never referenced
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/threshold.cu(3): warning : variable "dx3dconst" was declared but never referenced
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/threshold.cu(4): warning : variable "dy3dconst" was declared but never referenced
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/threshold.cu(5): warning : variable "dz3dconst" was declared but never referenced
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/pruning.cu(833): warning : function "calcChildKernel" was declared but never referenced
+D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\thrust/system/cuda/detail/copy_if.h(753): warning : calling a __host__ function("thrust::detail::aligned_reinterpret_cast<int *, void *> ") from a __host__ __device__ function("thrust::cuda_cub::__copy_if::copy_if< ::thrust::cuda_cub::par_t,  ::thrust::counting_iterator<int,  ::thrust::use_default,  ::thrust::use_default,  ::thrust::use_default> , unsigned char *, int *,  ::thrust::detail::functional::actor< ::thrust::detail::functional::composite< ::thrust::detail::functional::binary_operator< ::thrust::not_equal_to> ,  ::thrust::detail::functional::actor< ::thrust::detail::functional::argument<(unsigned int)0u> > ,  ::thrust::detail::functional::value<int> ,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type,  ::thrust::null_type> > > ") is not allowed
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(824): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(1759): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(2621): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(3460): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(4403): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(5301): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(6212): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7093): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7892): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h(772): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h(1628): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\device_double_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\sm_20_intrinsics.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\sm_20_intrinsics.h(925): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\cuda_fp16.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(824): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(1759): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(2621): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(3460): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(4403): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(5301): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(6212): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7093): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7892): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h(772): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h(1628): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\device_double_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\sm_20_intrinsics.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\sm_20_intrinsics.h(925): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\cuda_fp16.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(824): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(1759): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(2621): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(3460): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(4403): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(5301): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(6212): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7093): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7892): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h(772): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h(1628): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\device_double_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\sm_20_intrinsics.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\sm_20_intrinsics.h(925): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\cuda_fp16.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(824): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(1759): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(2621): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(3460): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(4403): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(5301): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(6212): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7093): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7892): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h(772): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h(1628): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\device_double_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\sm_20_intrinsics.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\sm_20_intrinsics.h(925): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\cuda_fp16.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(824): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(1759): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(2621): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(3460): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(4403): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(5301): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(6212): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7093): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7892): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h(772): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h(1628): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\device_double_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\sm_20_intrinsics.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\sm_20_intrinsics.h(925): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\cuda_fp16.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(824): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(1759): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(2621): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(3460): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(4403): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(5301): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(6212): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7093): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7892): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h(772): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h(1628): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\device_double_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\sm_20_intrinsics.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\sm_20_intrinsics.h(925): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\cuda_fp16.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(824): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(1759): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(2621): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(3460): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(4403): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(5301): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(6212): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7093): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7892): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h(772): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt/device_functions.h(1628): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\device_double_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\sm_20_intrinsics.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\sm_20_intrinsics.h(925): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\cuda_fp16.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/kernel.cu(230): warning : non-void function "main" should return a value
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/kernel.cu(301): warning : non-void function "main" should return a value
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/kernel.cu(369): warning : non-void function "main" should return a value
+  mergeSegments.cu
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/fastmarching.cu(454): warning : integer conversion resulted in a change of sign
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/fastmarching.cu(455): warning : integer conversion resulted in a change of sign
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/fastmarching.cu(456): warning : integer conversion resulted in a change of sign
+  kernel.cu
+  fastmarching.cu
+  compaction.cu
+  threshold.cu
+  poissonSample.cu
+  pruning.cu
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/mergeSegments.cu(359): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/mergeSegments.cu(436): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(824): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(1759): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(2621): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(3461): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(4403): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(5301): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(6212): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7093): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7892): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/kernel.cu(35): warning C4018: “<”: 有符号/无符号不匹配
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/kernel.cu(39): warning C4018: “<”: 有符号/无符号不匹配
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/kernel.cu(43): warning C4018: “<”: 有符号/无符号不匹配
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/fastmarching.cu(228): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/fastmarching.cu(248): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/fastmarching.cu(261): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/fastmarching.cu(666): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/fastmarching.cu(638): warning C4101: “errorCheck”: 未引用的局部变量
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/fastmarching.cu(1184): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(824): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(1759): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(2621): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(3461): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(4403): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(5301): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(6212): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7093): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7892): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\thrust/system/cuda/detail/reduce.h(944): warning C4244: “参数”: 从“Size”转换到“int”，可能丢失数据
+          with
+          [
+              Size=size_type
+          ]
+  D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\thrust/system/cuda/detail/reduce.h(1019): note: 参见对正在编译的函数 模板 实例化“T thrust::cuda_cub::reduce_n<thrust::cuda_cub::tag,InputIt,size_type,T,BinaryOp>(thrust::cuda_cub::execution_policy<thrust::cuda_cub::tag> &,InputIt,Size,T,BinaryOp)”的引用
+          with
+          [
+              T=int,
+              InputIt=thrust::device_ptr<int>,
+              BinaryOp=thrust::maximum<int>,
+              Size=size_type
+          ]
+  D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\thrust/detail/reduce.inl(71): note: 参见对正在编译的函数 模板 实例化“T thrust::cuda_cub::reduce<thrust::cuda_cub::tag,InputIterator,T,BinaryFunction>(thrust::cuda_cub::execution_policy<thrust::cuda_cub::tag> &,InputIt,InputIt,T,BinaryOp)”的引用
+          with
+          [
+              T=int,
+              InputIterator=thrust::device_ptr<int>,
+              BinaryFunction=thrust::maximum<int>,
+              InputIt=thrust::device_ptr<int>,
+              BinaryOp=thrust::maximum<int>
+          ]
+  D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\thrust/detail/reduce.inl(186): note: 参见对正在编译的函数 模板 实例化“T thrust::reduce<DerivedPolicy,InputIterator,T,BinaryFunction>(const thrust::detail::execution_policy_base<DerivedPolicy> &,InputIterator,InputIterator,T,BinaryFunction)”的引用
+          with
+          [
+              T=int,
+              DerivedPolicy=thrust::cuda_cub::tag,
+              InputIterator=thrust::device_ptr<int>,
+              BinaryFunction=thrust::maximum<int>
+          ]
+  D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/fastmarching.cu(258): note: 参见对正在编译的函数 模板 实例化“T thrust::reduce<thrust::device_ptr<T>,int,thrust::maximum<T>>(InputIterator,InputIterator,T,BinaryFunction)”的引用
+          with
+          [
+              T=int,
+              InputIterator=thrust::device_ptr<int>,
+              BinaryFunction=thrust::maximum<int>
+          ]
+D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\thrust/system/cuda/detail/reduce.h(973): warning C4244: “参数”: 从“Size”转换到“int”，可能丢失数据
+          with
+          [
+              Size=size_type
+          ]
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/threshold.cu(63): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(824): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(1759): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(2621): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(3461): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(4403): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(5301): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(6212): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7093): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7892): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\thrust/system/cuda/detail/reduce.h(944): warning C4244: “参数”: 从“Size”转换到“int”，可能丢失数据
+          with
+          [
+              Size=size_type
+          ]
+  D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\thrust/system/cuda/detail/reduce.h(1019): note: 参见对正在编译的函数 模板 实例化“T thrust::cuda_cub::reduce_n<thrust::cuda_cub::par_t,InputIt,size_type,T,BinaryOp>(thrust::cuda_cub::execution_policy<thrust::cuda_cub::par_t> &,InputIt,Size,T,BinaryOp)”的引用
+          with
+          [
+              T=double,
+              InputIt=uchar *,
+              BinaryOp=thrust::plus<double>,
+              Size=size_type
+          ]
+  D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\thrust/detail/reduce.inl(71): note: 参见对正在编译的函数 模板 实例化“T thrust::cuda_cub::reduce<thrust::cuda_cub::par_t,InputIterator,T,BinaryFunction>(thrust::cuda_cub::execution_policy<thrust::cuda_cub::par_t> &,InputIt,InputIt,T,BinaryOp)”的引用
+          with
+          [
+              T=double,
+              InputIterator=uchar *,
+              BinaryFunction=thrust::plus<double>,
+              InputIt=uchar *,
+              BinaryOp=thrust::plus<double>
+          ]
+  D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/threshold.cu(44): note: 参见对正在编译的函数 模板 实例化“T thrust::reduce<DerivedPolicy,uchar*,double,thrust::plus<T>>(const thrust::detail::execution_policy_base<DerivedPolicy> &,InputIterator,InputIterator,T,BinaryFunction)”的引用
+          with
+          [
+              T=double,
+              DerivedPolicy=thrust::cuda_cub::par_t,
+              InputIterator=uchar *,
+              BinaryFunction=thrust::plus<double>
+          ]
+D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\thrust/system/cuda/detail/reduce.h(973): warning C4244: “参数”: 从“Size”转换到“int”，可能丢失数据
+          with
+          [
+              Size=size_type
+          ]
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/compaction.cu(77): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/compaction.cu(196): warning C4244: “初始化”: 从“__int64”转换到“int”，可能丢失数据
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(824): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(1759): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(2621): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(3461): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(4403): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(5301): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(6212): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7093): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7892): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/pruning.cu(314): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/pruning.cu(364): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/pruning.cu(1355): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/pruning.cu(1374): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/pruning.cu(1394): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/pruning.cu(1550): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/pruning.cu(1619): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/pruning.cu(1716): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/pruning.cu(1721): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/pruning.cu(1767): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(824): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(1759): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(2621): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(3461): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(4403): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(5301): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(6212): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7093): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7892): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/poissonSample.cu(484): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/poissonSample.cu(486): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/poissonSample.cu(556): warning C4244: “=”: 从“double”转换到“_Ty”，可能丢失数据
+          with
+          [
+              _Ty=float
+          ]
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/poissonSample.cu(557): warning C4244: “=”: 从“double”转换到“_Ty”，可能丢失数据
+          with
+          [
+              _Ty=float
+          ]
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/poissonSample.cu(558): warning C4244: “=”: 从“double”转换到“_Ty”，可能丢失数据
+          with
+          [
+              _Ty=float
+          ]
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/poissonSample.cu(598): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/poissonSample.cu(719): warning C4267: “+=”: 从“size_t”转换到“int”，可能丢失数据
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/poissonSample.cu(759): warning C4267: “+=”: 从“size_t”转换到“int”，可能丢失数据
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/poissonSample.cu(760): warning C4267: “+=”: 从“size_t”转换到“int”，可能丢失数据
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/poissonSample.cu(761): warning C4267: “+=”: 从“size_t”转换到“int”，可能丢失数据
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/poissonSample.cu(785): warning C4267: “参数”: 从“size_t”转换到“unsigned int”，可能丢失数据
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/poissonSample.cu(790): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/poissonSample.cu(790): warning C4267: “参数”: 从“size_t”转换到“int”，可能丢失数据
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/poissonSample.cu(831): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/poissonSample.cu(832): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/poissonSample.cu(570): warning C4101: “gen”: 未引用的局部变量
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(824): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(1759): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(2621): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(3461): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(4403): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(5301): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(6212): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7093): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\documents\jifaley\software\cuda\10.0\cuda\include\crt\math_functions.h(7892): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\thrust/iterator/iterator_adaptor.h(204): warning C4244: “+=”: 从“__int64”转换到“Base”，可能丢失数据
+          with
+          [
+              Base=unsigned int
+          ]
+  D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\thrust/iterator/iterator_adaptor.h(202): note: 编译 类 模板 成员函数 "void thrust::iterator_adaptor<thrust::counting_iterator<unsigned int,thrust::use_default,thrust::use_default,thrust::use_default>,Incrementable,Incrementable,thrust::any_system_tag,thrust::random_access_traversal_tag,Incrementable,__int64>::advance(__int64)" 时
+          with
+          [
+              Incrementable=unsigned int
+          ]
+  D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\thrust/iterator/iterator_facade.h(171): note: 参见对正在编译的函数 模板 实例化“void thrust::iterator_adaptor<thrust::counting_iterator<unsigned int,thrust::use_default,thrust::use_default,thrust::use_default>,Incrementable,Incrementable,thrust::any_system_tag,thrust::random_access_traversal_tag,Incrementable,__int64>::advance(__int64)”的引用
+          with
+          [
+              Incrementable=unsigned int
+          ]
+  D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\thrust/iterator/counting_iterator.h(132): note: 参见对正在编译的 类 模板 实例化 "thrust::iterator_adaptor<thrust::counting_iterator<unsigned int,thrust::use_default,thrust::use_default,thrust::use_default>,Incrementable,Incrementable,thrust::any_system_tag,thrust::random_access_traversal_tag,Incrementable,__int64>" 的引用
+          with
+          [
+              Incrementable=unsigned int
+          ]
+  D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/poissonSample.cu(769): note: 参见对正在编译的 类 模板 实例化 "thrust::counting_iterator<unsigned int,thrust::use_default,thrust::use_default,thrust::use_default>" 的引用
+D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\thrust/system/cuda/detail/reduce.h(944): warning C4244: “参数”: 从“Size”转换到“int”，可能丢失数据
+          with
+          [
+              Size=size_type
+          ]
+  D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\thrust/system/cuda/detail/reduce.h(1019): note: 参见对正在编译的函数 模板 实例化“T thrust::cuda_cub::reduce_n<thrust::cuda_cub::par_t,InputIt,size_type,T,BinaryOp>(thrust::cuda_cub::execution_policy<thrust::cuda_cub::par_t> &,InputIt,Size,T,BinaryOp)”的引用
+          with
+          [
+              T=int,
+              InputIt=uchar *,
+              BinaryOp=thrust::plus<int>,
+              Size=size_type
+          ]
+  D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\thrust/detail/reduce.inl(71): note: 参见对正在编译的函数 模板 实例化“T thrust::cuda_cub::reduce<thrust::cuda_cub::par_t,InputIterator,T,BinaryFunction>(thrust::cuda_cub::execution_policy<thrust::cuda_cub::par_t> &,InputIt,InputIt,T,BinaryOp)”的引用
+          with
+          [
+              T=int,
+              InputIterator=uchar *,
+              BinaryFunction=thrust::plus<int>,
+              InputIt=uchar *,
+              BinaryOp=thrust::plus<int>
+          ]
+  D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/poissonSample.cu(128): note: 参见对正在编译的函数 模板 实例化“T thrust::reduce<DerivedPolicy,uchar*,int,thrust::plus<T>>(const thrust::detail::execution_policy_base<DerivedPolicy> &,InputIterator,InputIterator,T,BinaryFunction)”的引用
+          with
+          [
+              T=int,
+              DerivedPolicy=thrust::cuda_cub::par_t,
+              InputIterator=uchar *,
+              BinaryFunction=thrust::plus<int>
+          ]
+D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\thrust/system/cuda/detail/reduce.h(973): warning C4244: “参数”: 从“Size”转换到“int”，可能丢失数据
+          with
+          [
+              Size=size_type
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\VC\Tools\MSVC\14.16.27023\include\xutility(2903): warning C4244: “=”: 从“const _Ty”转换到“float”，可能丢失数据
+          with
+          [
+              _Ty=int
+          ]
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\VC\Tools\MSVC\14.16.27023\include\xutility(2917): note: 参见对正在编译的函数 模板 实例化“void std::_Fill_unchecked1<_FwdIt,_Ty>(_FwdIt,_FwdIt,const _Ty &,std::false_type)”的引用
+          with
+          [
+              _FwdIt=float *,
+              _Ty=int
+          ]
+  C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\VC\Tools\MSVC\14.16.27023\include\xutility(2925): note: 参见对正在编译的函数 模板 实例化“void std::_Fill_unchecked<float*,_Ty>(_FwdIt,_FwdIt,const _Ty &)”的引用
+          with
+          [
+              _Ty=int,
+              _FwdIt=float *
+          ]
+  D:/Documents/jifaley/code/Fast_Marching/InstantTrace/InstantTrace/InstantTrace/poissonSample.cu(550): note: 参见对正在编译的函数 模板 实例化“void std::fill<std::_Vector_iterator<std::_Vector_val<std::_Simple_types<_Ty>>>,int>(_FwdIt,_FwdIt,const int &)”的引用
+          with
+          [
+              _Ty=float,
+              _FwdIt=std::_Vector_iterator<std::_Vector_val<std::_Simple_types<float>>>
+          ]
+  loadTiff.cpp
+  utils.cpp
+  
+  D:\Documents\jifaley\code\Fast_Marching\InstantTrace\InstantTrace\InstantTrace>"D:\Documents\jifaley\software\CUDA\10.0\CUDA\bin\nvcc.exe" -dlink -o x64\Release\InstantTrace.device-link.obj -Xcompiler "/EHsc /W3 /nologo /O2 /Zi  /MD " -LD:\Documents\jifaley\software\opencv\opencv\build\x64\vc15\lib -LD:\Documents\jifaley\software\libtiff\lib -LD:\Documents\jifaley\software\CUDA\10.0\CUDA\lib\x64 opencv_world340.lib tiffd.lib cudart_static.lib cudadevrt.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib  -gencode=arch=compute_35,code=sm_35  --machine 64 x64\Release\compaction.cu.obj x64\Release\fastmarching.cu.obj x64\Release\kernel.cu.obj x64\Release\mergeSegments.cu.obj x64\Release\poissonSample.cu.obj x64\Release\pruning.cu.obj x64\Release\threshold.cu.obj 
+CUDALINK : nvlink warning : Stack size for entry function '_Z22interSectProcessKernelPiS_S_iPhS_PsS0_S_iiii' cannot be statically determined
+CUDALINK : nvlink warning : Stack size for entry function '_Z16renewColorKerneliPi' cannot be statically determined
+CUDALINK : nvlink warning : Stack size for entry function '_Z14getColorKernelPiS_S_PsS_i' cannot be statically determined
+CUDALINK : nvlink warning : Stack size for entry function '_Z23getMaxLengthColorKerneliPiPhfS_PsS_S_Pf' cannot be statically determined
+  opencv_world340.lib
+  tiffd.lib
+  cudart_static.lib
+  cudadevrt.lib
+  kernel32.lib
+  user32.lib
+  gdi32.lib
+  winspool.lib
+  comdlg32.lib
+  advapi32.lib
+  shell32.lib
+  ole32.lib
+  oleaut32.lib
+  uuid.lib
+  odbc32.lib
+  odbccp32.lib
+  compaction.cu.obj
+  fastmarching.cu.obj
+  kernel.cu.obj
+  mergeSegments.cu.obj
+  poissonSample.cu.obj
+  pruning.cu.obj
+  threshold.cu.obj
+    正在创建库 D:\Documents\jifaley\code\Fast_Marching\InstantTrace\InstantTrace\x64\Release\InstantTrace.lib 和对象 D:\Documents\jifaley\code\Fast_Marching\InstantTrace\InstantTrace\x64\Release\InstantTrace.exp
+  正在生成代码
+  All 242 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  已完成代码的生成
+  InstantTrace.vcxproj -> D:\Documents\jifaley\code\Fast_Marching\InstantTrace\InstantTrace\x64\Release\InstantTrace.exe

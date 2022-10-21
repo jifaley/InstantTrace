@@ -1,0 +1,49 @@
+The input is in .tif format, the output is in .swc format.
+Sample data: See the "data" folder. The correspoding ground truth are set in the "ground truth" folder.
+Results: The output of the program are stored in the "results" folder.
+
+The implementation is based on CUDA 10.0 toolkit and Visual Studio 2017.
+
+Please extract the "data.rar" and "opencv_world340.rar" if needed.
+Please ensure that: "tiffd.dll" (in libtiff) and "opencv_worldxxx.dll"(in opencv, release version) are in the same folder with "InstantTrace.exe".
+Please ensure that a "results" folder exists in the same folder with "InstantTrace.exe".
+
+
+To use:
+
+./InstantTrace [image_path] [global_threshold] [If_local_threshold_used]
+
+image_path: 
+If trace a single image, use the path ended with ".tif".
+If trace multi images, use the path of the folder. 
+Hint: trace the neuron images of different species using the same threshold may lead to bad performance. 
+For example, you may use a global threshold >= 30 for "1_CL-I_X_OREGON_R_ddaD_membrane-GFP.tif" in the sample dataset.
+
+global_threshold:
+The global intensity threshold. Use "-1" for auto-thresholding.
+
+If_local_threshold_used:
+If the local thresholding is enabled or disabled. Use "0" for disable this option, otherwise it is enabled.
+The local thresholding will only keep voxels with the top 5% intensity in the neighborhood. If it causes errors in topology, disable it.
+
+Sample: 
+
+InstantTrace data\\1_6_Ch2.tif  15  0
+Which means tracing this image using global threshold=15 and no local thresholding.
+
+InstantTrace data -1 1
+Which means tracing all of the images in the "data" folder using auto global thresholding and the local thresholding is also activated. 
+
+
+
+To re-compile:
+
+Please use Visual Studio to open the "InstantTrace.sln" solution file.
+Please manually set the directory of your libtiff/opencv/cuda headers and libraries.
+Please generate the code in x64-release mode.
+Please set the "CUDA-C/C++"--->"Common"--->"Generate Relocatable Device Code" to "-rdc=true". 
+This option will activate the CUDA dynamic parallism, or there will be compile errors.
+
+
+
+ 
