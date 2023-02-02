@@ -6,3 +6,9 @@
 *.fatbin
 *.dll
 .vs/
+*.rar
+data/
+*.obj
+*.tlog
+*.log
+*.pdb
