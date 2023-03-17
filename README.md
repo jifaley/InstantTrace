@@ -10,7 +10,7 @@ Results: The output of the program are stored in the "results" folder.
 
 The main function：kernel.cu
 
-## How to use: see "usage.txt"
+## How to use: see "how to use.txt"
 
 
 Steps:
