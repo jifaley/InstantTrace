@@ -12,3 +12,5 @@ data/
 *.tlog
 *.log
 *.pdb
+*.pptx
+*.tif

@@ -410,22 +410,9 @@ __global__ void filter_k(int *dst, const int *src, int n) {
 }
 
 
-/*
-函数:tracingExtendKernel_warpShuffle_atomic
-功能:tracingExtendKernel的优化版本，使用了一些warp技巧。
-实现:这里的优化有些复杂，简要的说，就是在warp中使用scan,在block中使用share-memory-atomic，在全局使用global atomic，
-使用三级优化实现fast-marching中的优先队列操作。
-*/
-/*
-Function：tracingExtendKernel_warpShuffle_atomic
-Work：The optimized version of tracingExtendKernel, using some warp tricks.
-Implementation: The optimization is a little tricky. In short, we use SCAN in the warp, use share-memory-atomic in the block,
-and use global atomic in the inter-block situation. This three-lovel optimization replaced the original priority queue in the
-fast-marching algorithm.
-*/
 __global__
-void tracingExtendKernel_warpShuffle_atomic(uchar* d_imagePtr, uchar* d_imagePtr_compact, int* d_frontier_compact, int* d_compress, int* d_decompress, float* d_distPtr, float* d_updateDistPtr,
-	int width, int height, int slice, int newSize, int compact_size, int* d_frontier_compact_2)
+void tracingExtendKernel_Prim(uchar* d_imagePtr, uchar* d_imagePtr_compact, int* d_frontier_compact, int* d_compress, int* d_decompress, float* d_distPtr, float* d_updateDistPtr,
+	int width, int height, int slice, int newSize, int compact_size, int* d_frontier_compact_2, uchar* d_radiusMat_compact, uchar* d_activeMat_compact)
 {
 	int tid = blockDim.x * blockIdx.x + threadIdx.x;
 
@@ -450,7 +437,162 @@ void tracingExtendKernel_warpShuffle_atomic(uchar* d_imagePtr, uchar* d_imagePtr
 		fullIdx = d_decompress[smallIdx];
 	}
 
-	//Set initial value. The __shfl_sync function transmit values in the warp.
+	//Set initial value. The __shfl_sync function transmit(broadcast) values in the warp.
+	fullIdx = __shfl_sync(-1, fullIdx, 0);
+	curDist = __shfl_sync(-1, curDist, 0);
+	curValue = __shfl_sync(-1, curValue, 0);
+
+	int3 curPos;
+	curPos.z = fullIdx / (width * height);
+	curPos.y = fullIdx % (width * height) / width;
+	curPos.x = fullIdx % width;
+
+	int3 neighborPos;
+	int neighborIdx;
+	int neighborSmallIdx;
+	uchar neighborValue;
+
+	int k = lane_id;
+	int modified = 0;
+
+	//这里用32个lane，只有6个有用，其他都浪费了！需要及时修改！！！！！！！！！！！！！！！！！！！！！
+	if (k < 6)
+	{
+		neighborPos.x = curPos.x + dx3dconst[k];
+		neighborPos.y = curPos.y + dy3dconst[k];
+		neighborPos.z = curPos.z + dz3dconst[k];
+
+		if (neighborPos.x < 0 || neighborPos.x >= width || neighborPos.y < 0 || neighborPos.y >= height
+			|| neighborPos.z < 0 || neighborPos.z >= slice)
+			return;
+		neighborIdx = neighborPos.z * width * height + neighborPos.y * width + neighborPos.x;
+
+		neighborValue = d_imagePtr[neighborIdx];
+
+
+		neighborSmallIdx = d_compress[neighborIdx];
+		if (neighborSmallIdx == -1) return;
+
+		neighborValue = d_imagePtr_compact[neighborSmallIdx];
+		if (neighborValue == 0) return;
+
+		//Modified by jifaley 20230217
+		//这是MST和最短路最大区别，下面还有一个区别
+		//if (d_activeMat_compact[neighborSmallIdx] == ALIVE) return;//这里用return不是continue，因为把循环拆开了
+
+		float EuclidDist = 1;
+		//EuclidDist = sqrtf(dx3d26const[k] * dx3d26const[k] + dy3d26const[k] * dy3d26const[k] + dz3d26const[k] * dz3d26const[k]);
+		//由于只有26个邻居，直接把对应的欧式距离存储起来了
+		////The distance of neighbors are stored at the constant memory.
+		EuclidDist = EuclidDistconst[k];
+		//两点之间的dist根据两点的欧式距离和亮度计算
+		//float deltaDist = gwdtFunc_gpu(EuclidDist, curValue, neighborValue);
+
+		if (neighborSmallIdx < 0)
+			printf("neighbor < 0!\n");
+
+		//if (abs(d_radiusMat_compact[neighborSmallIdx]) < 1e-5)
+		//	printf("zero!\n");
+		if (d_radiusMat_compact[neighborSmallIdx] < -0.5f)
+			printf("minus!\n");
+		float deltaDist;
+
+		if ((abs(d_radiusMat_compact[neighborSmallIdx]) < 1e-5))
+			deltaDist = 1024;
+		else
+			deltaDist = 1.0f / d_radiusMat_compact[neighborSmallIdx];
+
+
+		//deltaDist = gwdtFunc_gpu(EuclidDist, curValue, neighborValue);
+
+		//在使用原子操作之前，进行一次快速检查。如果当前点连上阶段的邻居都更新不了，就放弃更新
+		//A fast check before atomic operations.
+		if (d_distPtr[neighborSmallIdx] - 1e-5 < curDist + deltaDist)
+			return;
+
+
+
+		//这里是MST和最短路的第二个区别！！！！！！！！！！！！
+		float newDist = deltaDist;
+		newDist = curDist + deltaDist;
+		
+		//在dist的后面8个bit放入更新使用的方向k
+		newDist = __int_as_float(__float_as_int(newDist) & 0xFFFFFF00 | k);
+
+		//oldDist是atomicMin()返回的值，返回的是此次原子修改前的值,无论是否成功
+		int oldDist = atomicMin((int*)(d_updateDistPtr + neighborSmallIdx), __float_as_int(newDist));
+
+		//如果修改成功了
+		if (__int_as_float(oldDist) > newDist)
+		{
+			modified = 1;
+		}
+	}
+
+	int warpOffset;
+
+	if (modified)
+	{
+		//int pos = atomicAdd(&d_compact_size, 1);
+		//d_frontier_compact_2[pos] = neighborSmallIdx;
+
+		auto g = coalesced_threads();
+		int warp_res;
+		int rank = g.thread_rank();
+		if (rank == 0)
+			warp_res = atomicAdd(&d_compact_size, g.size());
+
+		warp_res = g.shfl(warp_res, 0);
+		int result = warp_res + rank;
+
+		d_frontier_compact_2[result] = neighborSmallIdx;
+	}
+}
+
+
+
+
+/*
+函数:tracingExtendKernel_warpShuffle_atomic
+功能:tracingExtendKernel的优化版本，使用了一些warp技巧。
+实现:这里的优化有些复杂，简要的说，就是在warp中使用scan,在block中使用share-memory-atomic，在全局使用global atomic，
+使用三级优化实现fast-marching中的优先队列操作。
+*/
+/*
+Function：tracingExtendKernel_warpShuffle_atomic
+Work：The optimized version of tracingExtendKernel, using some warp tricks.
+Implementation: The optimization is a little tricky. In short, we use SCAN in the warp, use share-memory-atomic in the block,
+and use global atomic in the inter-block situation. This three-lovel optimization replaced the original priority queue in the
+fast-marching algorithm.
+*/
+__global__
+void tracingExtendKernel_warpShuffle_atomic(uchar* d_imagePtr, uchar* d_imagePtr_compact, int* d_frontier_compact, int* d_compress, int* d_decompress, float* d_distPtr, float* d_updateDistPtr,
+	int width, int height, int slice, int newSize, int compact_size, int* d_frontier_compact_2, uchar* d_radiusMat_compact)
+{
+	int tid = blockDim.x * blockIdx.x + threadIdx.x;
+
+	__shared__ int blockLength;
+	__shared__ int blockOffset;
+
+	int warp_id = threadIdx.x / 32;
+	int lane_id = threadIdx.x % 32;
+	int pointId = blockIdx.x * blockDim.x / 32 + warp_id;
+
+	if (pointId >= compact_size) return;
+
+	int smallIdx, fullIdx;
+	int curValue;
+	float curDist;
+
+	if (lane_id == 0)
+	{
+		smallIdx = d_frontier_compact[pointId];
+		curValue = d_imagePtr_compact[smallIdx];
+		curDist = d_distPtr[smallIdx];
+		fullIdx = d_decompress[smallIdx];
+	}
+
+	//Set initial value. The __shfl_sync function transmit(broadcast) values in the warp.
 	fullIdx = __shfl_sync(-1, fullIdx, 0);
 	curDist = __shfl_sync(-1, curDist, 0);
 	curValue = __shfl_sync(-1, curValue, 0);
@@ -480,16 +622,39 @@ void tracingExtendKernel_warpShuffle_atomic(uchar* d_imagePtr, uchar* d_imagePtr
 		neighborIdx = neighborPos.z * width * height + neighborPos.y * width + neighborPos.x;
 
 		neighborValue = d_imagePtr[neighborIdx];
-		if (neighborValue == 0) return;
+		
 
 		neighborSmallIdx = d_compress[neighborIdx];
+		if (neighborSmallIdx == -1) return;
+
+		neighborValue = d_imagePtr_compact[neighborSmallIdx];
+		if (neighborValue == 0) return;
+
 		float EuclidDist = 1;
 		//EuclidDist = sqrtf(dx3d26const[k] * dx3d26const[k] + dy3d26const[k] * dy3d26const[k] + dz3d26const[k] * dz3d26const[k]);
 		//由于只有26个邻居，直接把对应的欧式距离存储起来了
 		////The distance of neighbors are stored at the constant memory.
 		EuclidDist = EuclidDistconst[k];
 		//两点之间的dist根据两点的欧式距离和亮度计算
-		float deltaDist = gwdtFunc_gpu(EuclidDist, curValue, neighborValue);
+		//float deltaDist = gwdtFunc_gpu(EuclidDist, curValue, neighborValue);
+
+		if (neighborSmallIdx < 0)
+			printf("neighbor < 0!\n");
+
+		//if (abs(d_radiusMat_compact[neighborSmallIdx]) < 1e-5)
+		//	printf("zero!\n");
+		if (d_radiusMat_compact[neighborSmallIdx] < -0.5f)
+			printf("minus!\n");
+		float deltaDist;
+
+		if ((abs(d_radiusMat_compact[neighborSmallIdx]) < 1e-5))
+			deltaDist = 1024;
+		else
+			deltaDist = 1.0f / d_radiusMat_compact[neighborSmallIdx];
+
+	
+
+		//deltaDist = gwdtFunc_gpu(EuclidDist, curValue, neighborValue);
 		
 		//在使用原子操作之前，进行一次快速检查。如果当前点连上阶段的邻居都更新不了，就放弃更新
 		//A fast check before atomic operations.
@@ -633,7 +798,7 @@ width, height, slice, newSize(the size of compressed image).
 Output：d_parentPtr(The parent information of each voxel. In fact, the initial neuron reconstruction are stored in these directed edges from parents to children.)
 */
 
-void buildInitNeuron(std::vector<int>& seedArr, uchar* d_imagePtr, uchar* d_imagePtr_compact, int* d_compress, int* d_decompress, int* d_parentPtr_compact, short int* d_seedNumberPtr, uchar* d_activeMat_compact, int* d_childNumMat_INT, int width, int height, int slice, int newSize)
+void buildInitNeuron(std::vector<int>& seedArr, uchar* d_imagePtr, uchar* d_imagePtr_compact, int* d_compress, int* d_decompress, int* d_parentPtr_compact, short int* d_seedNumberPtr, uchar* d_activeMat_compact, int* d_childNumMat_INT, int width, int height, int slice, int newSize, uchar* d_radiusMat_compact)
 {
 	cudaError_t errorCheck;
 
@@ -705,7 +870,11 @@ void buildInitNeuron(std::vector<int>& seedArr, uchar* d_imagePtr, uchar* d_imag
 		}
 
 		tracingExtendKernel_warpShuffle_atomic << <(compact_size - 1) / 32 + 1, 1024 >> > (d_imagePtr, d_imagePtr_compact, f1, d_compress, d_decompress, d_distPtr, d_updateDistPtr,
-			width, height, slice, newSize, compact_size, f2);
+			width, height, slice, newSize, compact_size, f2, d_radiusMat_compact);
+
+
+		//tracingExtendKernel_Prim << <(compact_size - 1) / 32 + 1, 1024 >> > (d_imagePtr, d_imagePtr_compact, f1, d_compress, d_decompress, d_distPtr, d_updateDistPtr,
+		//	width, height, slice, newSize, compact_size, f2, d_radiusMat_compact, d_activeMat_compact);
 
 		cudaMemcpyFromSymbol((void*)&compact_size, d_compact_size, sizeof(int));
 
@@ -756,7 +925,10 @@ __global__ void calcRadiusKernel_compact(uchar* d_imagePtr, uchar* d_imagePtr_co
 	float coverRatio = 0.5;
 	coverRatio = 0.9;
 
+	//Modified by jifaley 20230217 for prim, put 0.1->0.5
 	coverRatio = 0.1;
+
+	//coverRatio = 0.5;
 
 
 	int fullIdx = d_decompress[smallIdx];
@@ -959,7 +1131,7 @@ void calcRadius_gpu_compact(uchar* d_imagePtr, uchar* d_imagePtr_compact, int* d
 }
 
 __global__
-void FMRadius01(uchar* d_imagePtr, int* d_compress, int* d_decompress,  int* distPtr, int* updatePtr, uchar* d_curStatus, int width, int height, int slice, int newSize)
+void FMRadius01(uchar* d_imagePtr_compact, int* d_compress, int* d_decompress,  int* distPtr, int* updatePtr, uchar* d_curStatus, int width, int height, int slice, int newSize)
 {
 	int smallIdx = threadIdx.x + blockIdx.x*blockDim.x;
 	if (smallIdx >= newSize) return;
@@ -980,7 +1152,7 @@ void FMRadius01(uchar* d_imagePtr, int* d_compress, int* d_decompress,  int* dis
 	int3 neighborPos;
 	int neighborfullIdx;
 	int neighborSmallIdx;
-	for (int k = 0; k < 6; k++)
+	for (int k = 0; k < 4; k++) //这里改成只在x,y平面上进行扩展！因为z方向厚度不一样
 	{
 		neighborPos.x = curPos.x + dx3dconst[k];
 		neighborPos.y = curPos.y + dy3dconst[k];
@@ -989,14 +1161,14 @@ void FMRadius01(uchar* d_imagePtr, int* d_compress, int* d_decompress,  int* dis
 			|| neighborPos.z < 0 || neighborPos.z >= slice)
 			continue;
 		neighborfullIdx = neighborPos.z * width * height + neighborPos.y * width + neighborPos.x;
-		if (d_imagePtr[neighborfullIdx] == 0) continue;
 		neighborSmallIdx = d_compress[neighborfullIdx];
+		if (neighborSmallIdx == -1 || d_imagePtr_compact[neighborSmallIdx] == 0) continue;
 		atomicMin(&updatePtr[neighborSmallIdx], distPtr[smallIdx] + 1);
 	}
 }
 
 __global__
-void FMRadius02(uchar* d_imagePtr, int* distPtr, int* updatePtr, uchar* d_curStatus, int width, int height, int slice, int newSize, int* d_changeFlag)
+void FMRadius02(int* distPtr, int* updatePtr, uchar* d_curStatus, int width, int height, int slice, int newSize, int* d_changeFlag)
 {
 	int smallIdx = threadIdx.x + blockIdx.x*blockDim.x;
 	if (smallIdx >= newSize) return;
@@ -1009,28 +1181,27 @@ void FMRadius02(uchar* d_imagePtr, int* distPtr, int* updatePtr, uchar* d_curSta
 }
 
 
-__global__ void convertRadius(int* d_decompress, uchar* d_radiusMat, int* d_distPtr, int newSize)
+__global__ void convertRadius(uchar* d_radiusMat_compact, int* d_distPtr, int newSize)
 {
 	int smallIdx = blockDim.x * blockIdx.x + threadIdx.x;
 	if (smallIdx >= newSize) return;
-	int fullIdx = d_decompress[smallIdx];
 	int r = d_distPtr[smallIdx];
 	if (r <= 1e9 && r <= 255)
 	{
-		d_radiusMat[fullIdx] = r/1.732;
+		d_radiusMat_compact[smallIdx] = r/1.732;
 	}
 	else if (r <= 1e9)
-		d_radiusMat[fullIdx] = 255/1.732;
+		d_radiusMat_compact[smallIdx] = 255/1.732;
 	else
-		d_radiusMat[fullIdx] = 0;
+		d_radiusMat_compact[smallIdx] = 0;
 }
 
-__global__ void calcRadius_Preprocess(uchar* d_imagePtr, int* d_decompress, int* d_distPtr, uchar* d_statusMat, int newSize)
+__global__ void calcRadius_Preprocess(uchar* d_imagePtr_compact, int* d_distPtr, uchar* d_statusMat, int newSize)
 {
 	int smallIdx = blockDim.x * blockIdx.x + threadIdx.x;
 	if (smallIdx >= newSize) return;
-	int fullIdx = d_decompress[smallIdx];
-	if (d_imagePtr[fullIdx] == 1)
+	//int fullIdx = d_decompress[smallIdx];
+	if (d_imagePtr_compact[smallIdx] == 1)
 	{
 		d_distPtr[smallIdx] = 1;
 		d_statusMat[smallIdx] = TRIAL;
@@ -1040,7 +1211,7 @@ __global__ void calcRadius_Preprocess(uchar* d_imagePtr, int* d_decompress, int*
 
 
 //calcRadius_fastmarching: 通过d_imagePtr+ fastmarching计算节点半径，返回radiusMat和d_radiusMat
-void calcRadius_gpu_fastmarching(uchar* d_imagePtr, int* d_compress, int* d_decompress, uchar* d_radiusMat, int width, int height, int slice, int newSize)
+void calcRadius_gpu_fastmarching(uchar* d_imagePtr, uchar* d_imagePtr_compact, int* d_compress, int* d_decompress, uchar* d_radiusMat_compact, int width, int height, int slice, int newSize)
 {
 
 	double meanValue = 0;
@@ -1060,7 +1231,7 @@ void calcRadius_gpu_fastmarching(uchar* d_imagePtr, int* d_compress, int* d_deco
 	thrust::fill(thrust::device, d_distPtr, d_distPtr + newSize, 1e10);
 	cudaMemset(d_curStatus, FAR, sizeof(uchar) * newSize);
 	
-	calcRadius_Preprocess << < (newSize - 1) / 256 + 1, 256 >> > (d_imagePtr, d_decompress, d_distPtr, d_curStatus, newSize);
+	calcRadius_Preprocess << < (newSize - 1) / 256 + 1, 256 >> > (d_imagePtr_compact, d_distPtr, d_curStatus, newSize);
 	cudaMemcpy(d_upDate, d_distPtr, sizeof(int) * newSize, cudaMemcpyDeviceToDevice);
 
 
@@ -1073,14 +1244,14 @@ void calcRadius_gpu_fastmarching(uchar* d_imagePtr, int* d_compress, int* d_deco
 	{
 		counter++;
 		//std::cerr << counter << std::endl;
-		FMRadius01 << <(newSize-1)/256+1, 256 >> > (d_imagePtr, d_compress, d_decompress, d_distPtr, d_upDate, d_curStatus,
+		FMRadius01 << <(newSize-1)/256+1, 256 >> > (d_imagePtr_compact, d_compress, d_decompress, d_distPtr, d_upDate, d_curStatus,
 
 			width, height, slice, newSize);
 
 		changeFlag[0] = 0;
 		cudaMemcpy(d_changeFlag, changeFlag, sizeof(int), cudaMemcpyHostToDevice);
 
-		FMRadius02 << <(newSize - 1) / 256 + 1, 256 >> > (d_imagePtr, d_distPtr, d_upDate, d_curStatus,
+		FMRadius02 << <(newSize - 1) / 256 + 1, 256 >> > (d_distPtr, d_upDate, d_curStatus,
 
 			width, height, slice, newSize, d_changeFlag);
 
@@ -1098,7 +1269,7 @@ void calcRadius_gpu_fastmarching(uchar* d_imagePtr, int* d_compress, int* d_deco
 		std::cerr << counter << std::endl;
 	}
 
-	convertRadius << < (newSize - 1) / 256 + 1, 256 >> > (d_decompress, d_radiusMat, d_distPtr, newSize);
+	convertRadius << < (newSize - 1) / 256 + 1, 256 >> > (d_radiusMat_compact, d_distPtr, newSize);
 
 	cudaDeviceSynchronize();
 	errorCheck = cudaGetLastError();

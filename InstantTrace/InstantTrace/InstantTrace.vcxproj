@@ -88,6 +88,7 @@
     <CudaCompile Include="fastmarching.cu" />
     <CudaCompile Include="kernel.cu" />
     <CudaCompile Include="mergeSegments.cu" />
+    <CudaCompile Include="mst.cu" />
     <CudaCompile Include="poissonSample.cu" />
     <CudaCompile Include="pruning.cu" />
     <CudaCompile Include="threshold.cu" />
@@ -97,6 +98,7 @@
     <ClInclude Include="fastmarching.h" />
     <ClInclude Include="loadTiff.h" />
     <ClInclude Include="mergeSegments.h" />
+    <ClInclude Include="mst.h" />
     <ClInclude Include="poissonSample.h" />
     <ClInclude Include="pruning.h" />
     <ClInclude Include="threshold.h" />

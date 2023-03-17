@@ -11,6 +11,7 @@ d:\documents\jifaley\code\fast_marching\instanttrace\instanttrace\instanttrace\x
 d:\documents\jifaley\code\fast_marching\instanttrace\instanttrace\instanttrace\x64\release\fastmarching.cu.cache
 d:\documents\jifaley\code\fast_marching\instanttrace\instanttrace\instanttrace\x64\release\kernel.cu.cache
 d:\documents\jifaley\code\fast_marching\instanttrace\instanttrace\instanttrace\x64\release\mergesegments.cu.cache
+d:\documents\jifaley\code\fast_marching\instanttrace\instanttrace\instanttrace\x64\release\mst.cu.cache
 d:\documents\jifaley\code\fast_marching\instanttrace\instanttrace\instanttrace\x64\release\poissonsample.cu.cache
 d:\documents\jifaley\code\fast_marching\instanttrace\instanttrace\instanttrace\x64\release\pruning.cu.cache
 d:\documents\jifaley\code\fast_marching\instanttrace\instanttrace\instanttrace\x64\release\threshold.cu.cache
@@ -19,6 +20,7 @@ d:\documents\jifaley\code\fast_marching\instanttrace\instanttrace\instanttrace\x
 d:\documents\jifaley\code\fast_marching\instanttrace\instanttrace\instanttrace\x64\release\instanttrace.device-link.obj
 d:\documents\jifaley\code\fast_marching\instanttrace\instanttrace\instanttrace\x64\release\kernel.cu.obj
 d:\documents\jifaley\code\fast_marching\instanttrace\instanttrace\instanttrace\x64\release\mergesegments.cu.obj
+d:\documents\jifaley\code\fast_marching\instanttrace\instanttrace\instanttrace\x64\release\mst.cu.obj
 d:\documents\jifaley\code\fast_marching\instanttrace\instanttrace\instanttrace\x64\release\poissonsample.cu.obj
 d:\documents\jifaley\code\fast_marching\instanttrace\instanttrace\instanttrace\x64\release\pruning.cu.obj
 d:\documents\jifaley\code\fast_marching\instanttrace\instanttrace\instanttrace\x64\release\threshold.cu.obj

@@ -932,3 +932,6 @@ D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\thrust/system/detail/generi
 D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\thrust/system/detail/generic/transform_scan.inl
 D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\thrust/system/detail/adl/transform_scan.h
 D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\thrust/system/detail/sequential/transform_scan.h
+d:\documents\jifaley\code\fast_marching\instanttrace\instanttrace\instanttrace\mst.h
+D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\cuda_runtime.h
+D:\Documents\jifaley\software\CUDA\10.0\CUDA\include\device_launch_parameters.h

@@ -34,8 +34,8 @@ __constant__ const float EuclidDistconst[26] = {sq3, sq2, sq3, sq2, 1, sq2, sq3,
 };
 
 void addGreyWeightTransform(uchar* d_imagePtr, uchar* d_imagePtr_compact, int* d_compress, int* d_decompress, int width, int height, int slice, int newSize);
-void buildInitNeuron(std::vector<int>& seedArr, uchar* d_imagePtr, uchar* d_imagePtr_compact, int* d_compress, int* d_decompress, int* d_parentPtr_compact, short int* d_seedNumberPtr, uchar* d_activeMat_compact, int* d_childNumMat, int width, int height, int slice, int newSize);
+void buildInitNeuron(std::vector<int>& seedArr, uchar* d_imagePtr, uchar* d_imagePtr_compact, int* d_compress, int* d_decompress, int* d_parentPtr_compact, short int* d_seedNumberPtr, uchar* d_activeMat_compact, int* d_childNumMat, int width, int height, int slice, int newSize, uchar* d_radiusMat_compact);
 void calcRadius_gpu_compact(uchar* d_imagePtr, uchar* d_imagePtr_compact, int* d_compress, int* d_decompress, uchar* d_radiusMat_compact, int width, int height, int slice, int newSize, int globalThreshold);
-void calcRadius_gpu_fastmarching(uchar* imagePtr, int* d_compress, int* d_decompress, uchar* d_radiusMat, int width, int height, int slice, int newSize);
+void calcRadius_gpu_fastmarching(uchar* imagePtr, uchar* d_imagePtr_comapct, int* d_compress, int* d_decompress, uchar* d_radiusMat_compact, int width, int height, int slice, int newSize);
 
 void changeSimpleParentToFull(int* d_compress, int* d_decompress, int* d_parentPtr, uchar* d_parentSimplePtr, std::vector<int>& seedArr, int width, int height, int slice, int newSize);

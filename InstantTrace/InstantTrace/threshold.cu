@@ -270,6 +270,8 @@ void addDarkPaddingKernel(uchar* d_imagePtr, int width, int height, int slice, u
 		}
 
 		int windowSize = 1;
+		//windowSize = 5;
+		//windowSize = 3; //for flycircuits
 
 		for (int dx = -windowSize; dx <= windowSize; dx++)
 			for (int dy = -windowSize; dy <= windowSize; dy++)

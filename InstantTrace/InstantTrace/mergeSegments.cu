@@ -335,6 +335,65 @@ void getSeedRadius(int* d_seedArr, int* d_compress, uchar* d_seedRadiusMat, ucha
 }
 
 
+__global__
+void getExtraIntersect(int* d_compress, int* d_decompress, int* d_childNumMat, int* d_parentPtr_compact, short int* d_seedNumberPtr, int width, int height, int slice, int newSize)
+{
+	int idx = blockDim.x * blockIdx.x + threadIdx.x;
+	if (idx >= newSize) return;
+	int smallIdx = idx;
+
+	if (d_childNumMat[smallIdx] > 0) return;
+	if (d_parentPtr_compact[smallIdx + newSize] != -1) return;
+	int fullIdx = d_decompress[smallIdx];
+
+
+
+	int3 curPos;
+	curPos.z = fullIdx / (width * height);
+	curPos.y = fullIdx % (width * height) / width;
+	curPos.x = fullIdx % width;
+
+	int3 neighborPos;
+	int neighborIdx;
+	int neighborSmallIdx;
+	uchar neighborValue;
+
+	int curSeed = d_seedNumberPtr[smallIdx];
+
+	//向周围26个方向扩展
+	//Extend towards 26-way neighbor
+	for (int k = 0; k < 6; k++)
+	{
+		neighborPos.x = curPos.x + dx3dconst[k];
+		neighborPos.y = curPos.y + dy3dconst[k];
+		neighborPos.z = curPos.z + dz3dconst[k];
+
+		if (neighborPos.x < 0 || neighborPos.x >= width || neighborPos.y < 0 || neighborPos.y >= height
+			|| neighborPos.z < 0 || neighborPos.z >= slice)
+			continue;
+
+		neighborIdx = neighborPos.z * width * height + neighborPos.y * width + neighborPos.x;
+		neighborSmallIdx = d_compress[neighborIdx];
+		if (neighborSmallIdx == -1)	continue;
+
+
+		if (d_parentPtr_compact[neighborSmallIdx + newSize] != -1) continue;
+
+		int newSeed = d_seedNumberPtr[neighborSmallIdx];
+
+		if (curSeed != newSeed)
+		{
+			if (curSeed < newSeed)
+			{
+				d_parentPtr_compact[smallIdx + newSize] = neighborSmallIdx;
+				break;
+			}
+		}
+	}
+
+
+}
+
 /*
 函数:mergeSegments
 功能:在初始追踪完成之后，对相遇的神经分支进行合并
@@ -352,6 +411,7 @@ void mergeSegments(std::vector<int>& seedArr, std::vector<int>& disjointSet, int
 	TimerClock timer;
 	timer.update();
 	std::vector<int> intersectArr;
+	cudaError_t errorCheck;
 
 	int* d_seedArr;
 	cudaMalloc(&d_seedArr, sizeof(int) * seedArr.size());
@@ -360,12 +420,25 @@ void mergeSegments(std::vector<int>& seedArr, std::vector<int>& disjointSet, int
 
 
 
+	//没有:4500
+	getExtraIntersect << <(newSize - 1) / 256 + 1, 256 >> > (d_compress, d_decompress, d_childNumMat, d_parentPtr_compact, d_seedNumberPtr, width, height, slice, newSize);
+	errorCheck = cudaGetLastError();
+	if (errorCheck != cudaSuccess) {
+		std::cerr << "After Get Extra Intersect " << cudaGetErrorString(errorCheck) << std::endl;
+		system("pause");
+		return;
+	}
+
+	std::cerr << "Get Extra Intersect cost: " << timer.getTimerMilliSec() << "ms" << std::endl;
+	timer.update();
+
+
 	//判断一下每个交点附近是否有他的两个父亲
 
 	//01 查找InterSect
 	//01 Finding the intersect of branches
 
-	cudaError_t errorCheck;
+	
 	const int queueSize = 5000000; //max number of intersects
 	int* queue = (int*)malloc(sizeof(int) * queueSize);
 	int* d_queue;
@@ -389,7 +462,7 @@ void mergeSegments(std::vector<int>& seedArr, std::vector<int>& disjointSet, int
 		system("pause");
 		return;
 	}
-	//std::cerr << "InterSect Size: " << interSectNum << std::endl;
+	std::cerr << "InterSect Size: " << interSectNum << std::endl;
 	std::cerr << "InterSect Finding cost: " << timer.getTimerMilliSec() << "ms" << std::endl;
 	timer.update();
 

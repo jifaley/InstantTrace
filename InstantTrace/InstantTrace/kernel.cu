@@ -10,6 +10,7 @@
 #include "fastmarching.h"
 #include "mergeSegments.h"
 #include "compaction.h"
+#include "mst.h"
 
 #define __USE__DIST26
 
@@ -92,6 +93,8 @@ int main(int argc, char* argv[])
 		std::string name = names[item];
 
 		std::cerr << "file: " << item + 1 << "/" << names.size() << std::endl;
+
+		std::cerr << "filename: " << name << std::endl;
 		cudaDeviceReset();
 
 		timer.update();
@@ -173,6 +176,7 @@ int main(int argc, char* argv[])
 				globalThreshold = atoi(argv[2]);
 		}
 
+
 		//globalThreshold = 1;// for flycircuit
 
 		if (globalThreshold > 1)
@@ -220,6 +224,11 @@ int main(int argc, char* argv[])
 		thrust::fill(thrust::device, d_radiusMat_compact, d_radiusMat_compact + newSize, 0);
 
 		calcRadius_gpu_compact(d_imagePtr, d_imagePtr_compact, d_compress, d_decompress, d_radiusMat_compact, width, height, slice, newSize, globalThreshold);
+		//calcRadius_gpu_fastmarching(d_imagePtr, d_imagePtr_compact, d_compress, d_decompress, d_radiusMat_compact, width, height, slice, newSize);
+
+
+		//primPruneNode();
+
 
 
 		cudaDeviceSynchronize();
@@ -327,8 +336,11 @@ int main(int argc, char* argv[])
 		cudaMemset(d_childNumMat, 0, sizeof(int) * newSize);
 
 
-		buildInitNeuron(seedArr, d_imagePtr, d_imagePtr_compact, d_compress, d_decompress, d_parentPtr_compact, d_seedNumberPtr, d_activeMat_compact, d_childNumMat, width, height, slice, newSize);
+		buildInitNeuron(seedArr, d_imagePtr, d_imagePtr_compact, d_compress, d_decompress, d_parentPtr_compact, d_seedNumberPtr, d_activeMat_compact, d_childNumMat, width, height, slice, newSize, d_radiusMat_compact);
 
+		//primMST(d_imagePtr_compact, seedArr, d_seedNumberPtr, d_compress, d_decompress, d_radiusMat_compact, d_activeMat_compact, d_parentPtr_compact, width, height, slice, newSize);
+
+		//cudaMemset(d_activeMat_compact, 0, sizeof(uchar) * newSize);
 
 		std::cerr << "Init neuron generating cost: " << timer.getTimerMilliSec() << "ms" << std::endl << std::endl;
 		timer.update();
