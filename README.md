@@ -12,6 +12,8 @@ The main function：kernel.cu
 
 ## How to use: see "how to use.txt"
 
+##注意：请使用release_3 版本(在commit里面查询)！最新版可能不稳定！
+
 
 Steps:
 1. Load the image.
